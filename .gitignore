@@ -1,2 +1,3 @@
 .vagrant/
 environment.sh
+*.pyc
