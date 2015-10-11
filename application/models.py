@@ -13,7 +13,7 @@ class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(
-        db.string(MAX_LENGTH['user_email']),
+        db.String(MAX_LENGTH['user_email']),
         unique=True,
         nullable=False
         )
