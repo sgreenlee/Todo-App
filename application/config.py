@@ -17,6 +17,7 @@ class DevelopmentConfiguration(BaseConfiguration):
 
 
 class TestingConfiguration(BaseConfiguration):
+    TESTING = True
     SQLALCHEMY_DATABASE_URI = 'postgresql://{0}:{1}@localhost/{2}'.format(
         os.environ.get('TEST_DATABASE_ROLE'),
         os.environ.get('TEST_DATABASE_PW'),
