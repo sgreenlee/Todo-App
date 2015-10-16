@@ -1,11 +1,12 @@
 from flask.ext.script import Shell, Manager, Server
 from application import create_app, db
+from application.models import User
 
 app = create_app('development')
 manager = Manager(app)
 
 def make_shell_context():
-    return dict(app=app, db=db)
+    return dict(app=app, db=db, User=User)
 manager.add_command('shell', Shell(make_context=make_shell_context))
 
 # development server configuration
