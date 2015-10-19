@@ -32,9 +32,15 @@ class TestModels(unittest.TestCase):
         with self.assertRaises(AttributeError):
             steve.password
 
+    def test_password_setter(self):
+        """Setting user password creates password_hash attribute"""
+        steve = TestModels.create_steve()
+        steve.password = 'cat'
+        self.assertTrue(steve.password_hash is not None)
+
     def test_password_hash(self):
-        """Check that password hashing and verifying is working"""
+        """Test password hashing and verifying"""
         steve = TestModels.create_steve()
         steve.password = 'aardvark'
-        self.assertTrue(steve.password_hash is not None)
         self.assertTrue(steve.verify_password('aardvark'))
+        self.assertFalse(steve.verify_password('llama'))
