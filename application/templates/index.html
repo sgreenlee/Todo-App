@@ -3,5 +3,10 @@
 {% block title %} Home {% endblock %}
 
 {% block page_content %}
-<h1>Welcome!</h1>
+<h1>Welcome,
+{% if current_user.is_authenticated %}
+{{ current_user.first_name }}
+{% else %}
+Stranger
+{% endif %}!</h1>
 {% endblock %}
