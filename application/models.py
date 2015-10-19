@@ -1,14 +1,18 @@
 from flask.ext.sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask.ext.login import UserMixin
-from . import login_manager
+from flask.ext.login import LoginManager
+
+login_manager = LoginManager()
+login_manager.session_protection = 'strong'
+login_manager.login_view = 'auth.login'
 
 db = SQLAlchemy()
 
 MAX_LENGTH = {
-    'user_email': 40,
-    'user_first_name': 20,
-    'user_last_name': 20
+    'email': 40,
+    'first_name': 20,
+    'last_name': 20
 }
 
 
@@ -16,16 +20,16 @@ class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(
-        db.String(MAX_LENGTH['user_email']),
+        db.String(MAX_LENGTH['email']),
         unique=True,
         nullable=False
         )
     first_name = db.Column(
-        db.String(MAX_LENGTH['user_first_name']),
+        db.String(MAX_LENGTH['first_name']),
         nullable=False
         )
     last_name = db.Column(
-        db.String(MAX_LENGTH['user_last_name']),
+        db.String(MAX_LENGTH['last_name']),
         nullable=False
         )
     password_hash = db.Column(db.String(128))

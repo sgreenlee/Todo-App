@@ -1,12 +1,7 @@
 from flask import Flask
-from models import db
+from models import db, login_manager
 from config import configuration
 from flask_bootstrap import Bootstrap
-from flask.ext.login import LoginManager
-
-login_manager = LoginManager()
-login_manager.session_protection = 'strong'
-login_manager.login_view = 'auth.login'
 
 
 def create_app(config_name='development'):
@@ -20,6 +15,11 @@ def create_app(config_name='development'):
     db.init_app(app)
     login_manager.init_app(app)
 
-    # attach routes here
+    # register blueprints
+    from .main import main as main_blueprint
+    app.register_blueprint(main_blueprint)
+
+    from .auth import auth as auth_blueprint
+    app.register_blueprint(auth_blueprint, url_prefix='/auth')
 
     return app
