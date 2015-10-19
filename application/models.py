@@ -26,13 +26,13 @@ class User(UserMixin, db.Model):
         )
     first_name = db.Column(
         db.String(MAX_LENGTH['first_name']),
-        nullable=False
+        nullable=True
         )
     last_name = db.Column(
         db.String(MAX_LENGTH['last_name']),
-        nullable=False
+        nullable=True
         )
-    password_hash = db.Column(db.String(128))
+    password_hash = db.Column(db.String(128), nullable=False)
 
     @property
     def password(self):
