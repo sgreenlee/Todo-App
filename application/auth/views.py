@@ -8,6 +8,7 @@ from .forms import LoginForm, RegistrationForm
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
+    """Log in user."""
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -21,6 +22,7 @@ def login():
 @auth.route('/logout')
 @login_required
 def logout():
+    """Log out current user."""
     logout_user()
     flash('You have been logged out.')
     return redirect(url_for('main.index'))
@@ -28,6 +30,7 @@ def logout():
 
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
+    """Register new user."""
     form = RegistrationForm()
     if form.validate_on_submit():
         new_user = User(
