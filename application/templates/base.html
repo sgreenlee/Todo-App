@@ -1,0 +1,35 @@
+{% extends "bootstrap/base.html" %}
+
+{% block navbar %}
+<div  class="navbar navbar-inverse" role="navigation">
+	<div class="container">
+		<div class="navbar-header">
+			<button class="navbar-toggle" type="button" data-toggle="collapse"
+				data-target=".navbar-collapse">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a href="/" class="navbar-brand">Protaskinate</a>
+		</div>
+		<div class="navbar-collapse collapse">
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="/">Home</a></li>
+				{% if current_user.is_authenticated %}
+				<li><a href="">Sign Out</a></li>
+				{% else %}
+				<li><a href="{{ url_for('auth.login') }}">Sign In</a></li>
+				{% endif %}
+			</ul>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+	{% block page_content %}
+	{% endblock %}
+</div>
+{% endblock %}
