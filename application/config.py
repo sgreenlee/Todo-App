@@ -5,6 +5,7 @@ import os
 
 class BaseConfiguration():
     SECRET_KEY = os.environ.get('FLASK_SECRET_KEY')
+    SQLALCHEMY_COMMIT_ON_TEARDOWN = True
 
 
 class DevelopmentConfiguration(BaseConfiguration):
