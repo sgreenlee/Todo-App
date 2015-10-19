@@ -3,10 +3,14 @@
 {% block title %} Home {% endblock %}
 
 {% block page_content %}
-<h1>Welcome,
-{% if current_user.is_authenticated %}
-{{ current_user.first_name }}
-{% else %}
-Stranger
-{% endif %}!</h1>
+{% include 'flash_messages.html' %}
+<div class="pageheader">
+	<h1>
+		{% if current_user.is_authenticated %}
+Welcome{{', {0}'.format(current_user.first_name) if current_user.first_name else ''}}!
+		{% else %}
+			Welcome, Stranger!
+		{% endif %}
+	</h1>
+</div>
 {% endblock %}
