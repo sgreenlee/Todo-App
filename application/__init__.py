@@ -2,6 +2,9 @@ from flask import Flask
 from models import db, login_manager
 from config import configuration
 from flask_bootstrap import Bootstrap
+from flask_mail import Mail
+
+mail = Mail()
 
 
 def create_app(config_name='development'):
@@ -13,6 +16,7 @@ def create_app(config_name='development'):
 
     Bootstrap(app)
     db.init_app(app)
+    mail.init_app(app)
     login_manager.init_app(app)
 
     # register blueprints

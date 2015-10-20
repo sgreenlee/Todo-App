@@ -1,0 +1,15 @@
+<h3>Dear {{ user.first_name or user.email }},</h3>
+
+<b>Welcome to Protaskinate!</b>
+<br>
+
+To confirm your account please click on the following link:
+<br>
+<a href="{{ url_for('auth.confirm', token=token, _external=True) }}">Confirm your account!</a>
+<br>
+
+Sincerly,
+<br>
+The Protaskinate Team
+<br>
+Note: replies to this email are not monitored.

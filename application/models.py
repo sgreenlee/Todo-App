@@ -1,7 +1,9 @@
 from flask.ext.sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask.ext.login import UserMixin
 from flask.ext.login import LoginManager
+from flask import current_app
 
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
@@ -33,6 +35,7 @@ class User(UserMixin, db.Model):
         nullable=True
         )
     password_hash = db.Column(db.String(128), nullable=False)
+    is_confirmed = db.Column(db.Boolean, default=False)
 
     @property
     def password(self):
@@ -48,6 +51,25 @@ class User(UserMixin, db.Model):
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(int(user_id))
+
+    def generate_confirmation_token(self, expiration=3600):
+        s = Serializer(current_app.config['SECRET_KEY'], expiration)
+        return s.dumps({'confirm': self.id})
+
+    def confirm(self, token):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except:
+            return False
+        if data.get('confirm') is None:
+            return False
+        if data.get('confirm') == self.id:
+            self.is_confirmed = True
+            db.session.add(self)
+            return True
+        else:
+            return False
 
     def __repr__(self):
         return "<User object email={0}>".format(self.email)

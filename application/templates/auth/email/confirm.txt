@@ -1,0 +1,12 @@
+Dear {{ user.first_name or user.email }},
+
+Welcome to Protaskinate!
+
+To confirm your account please click on the following link:
+
+{{ url_for('auth.confirm', token=token, _external=True) }}
+
+Sincerly,
+The Protaskinate Team
+
+Note: replies to this email are not monitored.
