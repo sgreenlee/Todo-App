@@ -19,3 +19,9 @@ def send_email(to, subject, template, **kwargs):
 def send_async_email(app, msg):
     with app.app_context():
         mail.send(msg)
+
+
+def send_confirmation_email(user):
+    token = user.generate_confirmation_token()
+    send_email(user.email, 'Confirm your account', 'auth/email/confirm',
+               token=token, user=user)

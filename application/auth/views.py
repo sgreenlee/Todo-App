@@ -4,7 +4,7 @@ from flask.ext.login import current_user
 from . import auth
 from .. import db
 from ..models import User
-from ..email import send_email
+from ..email import send_confirmation_email
 from .forms import LoginForm, RegistrationForm
 
 
@@ -40,9 +40,7 @@ def register():
             password=form.password.data)
         db.session.add(new_user)
         db.session.commit()
-        token = new_user.generate_confirmation_token()
-        send_email(new_user.email, 'Confirm Your Account',
-                   'auth/email/confirm', user=new_user, token=token)
+        send_confirmation_email(new_user, token)
         flash("You have successfully registered. A confirmation email has"
               "been sent to you at {0}.".format(new_user.email))
         return redirect(url_for('auth.login'))
@@ -66,9 +64,6 @@ def confirm(token):
 def resend_confirmation():
     if current_user.is_confirmed:
         return(redirect(url_for('main.index')))
-    token = current_user.generate_confirmation_token()
-    send_email(current_user.email, 'Confirm Your Account',
-               'auth/email/confirm', user=current_user,
-               token=token)
+    send_confirmation_email(current_user)
     flash("A new confirmation message has been sent. Please check your email.")
     return(redirect(url_for('main.index')))
