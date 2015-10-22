@@ -55,7 +55,6 @@ class TestModels(unittest.TestCase):
         db.session.add(steve)
         db.session.add(alan)
         db.session.commit()  # generate ids for steve and alan
-
         token = steve.generate_confirmation_token()
         self.assertTrue(steve.confirm(token))
         self.assertFalse(alan.confirm(token))
