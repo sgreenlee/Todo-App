@@ -71,5 +71,9 @@ class User(UserMixin, db.Model):
         else:
             return False
 
+    def generate_password_reset_token(self, expiration=3600):
+        s = Serializer(current_app.config['SECRET_KEY'], expiration)
+        return s.dumps({'reset': self.id})
+
     def __repr__(self):
         return "<User object email={0}>".format(self.email)

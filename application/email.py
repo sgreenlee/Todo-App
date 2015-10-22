@@ -25,3 +25,9 @@ def send_confirmation_email(user):
     token = user.generate_confirmation_token()
     send_email(user.email, 'Confirm your account', 'auth/email/confirm',
                token=token, user=user)
+
+
+def send_password_reset_email(user):
+    token = user.generate_password_reset_token()
+    send_email(user.email, 'Reset your password', 'auth/email/reset',
+               token=token, user=user)
