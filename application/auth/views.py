@@ -53,6 +53,7 @@ def register():
 @auth.route('/confirm/<token>')
 @login_required
 def confirm(token):
+    """Confirm user account corresponding to token."""
     if current_user.is_confirmed:
         return(redirect(url_for('main.index')))
     if current_user.confirm(token):
@@ -65,6 +66,7 @@ def confirm(token):
 @auth.route('/confirm')
 @login_required
 def resend_confirmation():
+    """Resend confirmation email to currently authenticated user."""
     if current_user.is_confirmed:
         return(redirect(url_for('main.index')))
     send_confirmation_email(current_user)
@@ -74,6 +76,7 @@ def resend_confirmation():
 
 @auth.route('/reset', methods=['GET', 'POST'])
 def request_password_reset():
+    """Request password reset email."""
     form = RequestPasswordResetForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -85,6 +88,7 @@ def request_password_reset():
 
 @auth.route('/reset/<token>', methods=['GET', 'POST'])
 def reset_password(token):
+    """Reset user password."""
     s = Serializer(current_app.config['SECRET_KEY'])
     data = s.loads(token)
     user_id = data.get('reset')

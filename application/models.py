@@ -72,6 +72,7 @@ class User(UserMixin, db.Model):
             return False
 
     def generate_password_reset_token(self, expiration=3600):
+        """Return password reset token."""
         s = Serializer(current_app.config['SECRET_KEY'], expiration)
         return s.dumps({'reset': self.id})
 
