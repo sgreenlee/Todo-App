@@ -16,13 +16,22 @@ class LoginForm(Form):
 
 
 class RegistrationForm(Form):
-    email = StringField('Email', validators=[Required(),
-                                             Length(1, MAX_LENGTH['email']),
-                                             Email()])
-    password = PasswordField('Password', validators=[
-        Required(), EqualTo('password2', message='Passwords must match.')])
-    password2 = PasswordField('Confirm Password', validators=[Required()])
+    """New user registration form."""
+    # fields
+    email = StringField('Email')
+    first_name = StringField('First Name')
+    last_name = StringField('Last Name')
+    password = PasswordField('Password')
+    password2 = PasswordField('Confirm Password')
     submit = SubmitField('Register')
+
+    # validators
+    email.validators = [Required(), Length(1, MAX_LENGTH['email']), Email()]
+    first_name.validators = [Length(1, MAX_LENGTH['first_name'])]
+    password.validators = [
+        Required(),
+        EqualTo('password2', message='Passwords must match.')]
+    password2.validators = [Required()]
 
     def validate_email(self, field):
         if User.query.filter_by(email=field.data).first():
