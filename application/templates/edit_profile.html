@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block title %} Edit Profile {% endblock %}
+
+{% block page_content %}
+{% include 'flash_messages.html' %}
+<div class="page-header">
+	<h1>Edit Your Profile</h1>
+</div>
+
+<div class="col-md-4">
+	{{ wtf.quick_form(form) }}
+
+	<p><a href="{{ url_for('main.view_profile') }}">Cancel</a></p>
+</div>
+
+
+
+{% endblock %}
