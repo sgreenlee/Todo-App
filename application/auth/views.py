@@ -40,10 +40,12 @@ def register():
     if form.validate_on_submit():
         new_user = User(
             email=form.email.data,
+            first_name=form.first_name.data,
+            last_name=form.last_name.data,
             password=form.password.data)
         db.session.add(new_user)
         db.session.commit()
-        send_confirmation_email(new_user, token)
+        send_confirmation_email(new_user)
         flash("You have successfully registered. A confirmation email has"
               "been sent to you at {0}.".format(new_user.email))
         return redirect(url_for('auth.login'))
