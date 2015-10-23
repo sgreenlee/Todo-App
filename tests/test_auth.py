@@ -25,9 +25,9 @@ class TestAuth(unittest.TestCase):
         response = self.client.post(
             url_for('auth.register'),
             data={
-                'email': 'sam.a.greenlee@gmail.com',
-                'first_name': 'Sam',
-                'last_name': 'Greenlee',
+                'email': 'alansmith@fakeemail.com',
+                'first_name': 'Alan',
+                'last_name': 'Smith',
                 'password': 'llama',
                 'password2': 'llama'
                 },
@@ -44,10 +44,10 @@ class TestAuth(unittest.TestCase):
         user = User.query.filter_by(email='sam.a.greenlee@gmail.com').first()
         self.assertIsNotNone(user, 'New user not found in database')
         self.assertEqual(
-            user.first_name, 'Sam',
+            user.first_name, 'Alan',
             'New user has incorrect first name: {0}'.format(user.first_name))
         self.assertEqual(
-            user.last_name, 'Greenlee',
+            user.last_name, 'Smith',
             'New user has incorrect last name: {0}'.format(user.last_name))
         self.assertFalse(user.is_confirmed, 'New user is confirmed')
 
@@ -55,13 +55,13 @@ class TestAuth(unittest.TestCase):
         response = self.client.post(
             url_for('auth.login'),
             data={
-                'email': 'sam.a.greenlee@gmail.com',
+                'email': 'alansmith@fakeemail.com',
                 'password': 'llama'
                 },
             follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertTrue(
-            re.search('Welcome,\s+Sam', data),
+            re.search('Welcome,\s+Alan', data),
             "Home page displays user's name after login.")
 
         # confirm new user
