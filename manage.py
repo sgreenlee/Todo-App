@@ -1,7 +1,7 @@
 from flask.ext.script import Shell, Manager, Server
 from flask.ext.migrate import Migrate, MigrateCommand
 from application import create_app, db
-from application.models import User
+from application.models import User, Task
 
 app = create_app('development')
 manager = Manager(app)
@@ -9,7 +9,7 @@ migrate = Migrate(app, db)
 
 
 def make_shell_context():
-    return dict(app=app, db=db, User=User)
+    return dict(app=app, db=db, User=User, Task=Task)
 manager.add_command('shell', Shell(make_context=make_shell_context))
 
 # development server configuration
