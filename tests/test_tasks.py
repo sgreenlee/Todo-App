@@ -46,13 +46,14 @@ class TestTasks(unittest.TestCase):
                 'description': 'do the laundry',
                 'deadline': '2034-10-01',
                 'priority': 'LOW'
-            })
-        err_msg = 'New task creation unsuccessful: http response status is {0}'
-        self.assertTrue(response.status_code == 201,
-                        err_msg.format(response.status_code))
+            },
+            follow_redirects=True)
+        data = response.get_data(as_text=True)
+        err_msg = 'New task creation unsuccessful'
+        self.assertTrue('Your new task has been created' in data, err_msg)
 
         # get active tasks
-        response = self.client.get(url_for('main.get_tasks'))
+        response = self.client.get(url_for('main.tasks'))
         data = response.get_data(as_text=True)
         err_msg = 'Get tasks failed: "do the laundry" not in response'
         self.assertTrue('do the laundry' in data)
@@ -62,13 +63,14 @@ class TestTasks(unittest.TestCase):
                 'description': 'pay parking ticket',
                 'deadline': '2034-05-01',
                 'priority': 'HIGH'
-            })
-        err_msg = 'Second task not created: http response status is {0}'
-        self.assertTrue(response.status_code == 201,
-                        err_msg.format(response.status_code))
+            },
+            follow_redirects=True)
+        data = response.get_data(as_text=True)
+        err_msg = 'Second task "pay parking ticket" not created'
+        self.assertTrue("Your new task has been created" in data, err_msg)
 
         # get new tasks
-        response = self.client.get(url_for('main.get_tasks'))
+        response = self.client.get(url_for('main.tasks'))
         data = response.get_data(as_text=True)
         err_msg = 'Get tasks failed: could not find both tasks'
         self.assertTrue(
@@ -76,14 +78,15 @@ class TestTasks(unittest.TestCase):
 
         # mark a task as complete
         task = Task.query.filter_by(description='pay parking ticket').first()
-        response = self.client.post(url_for('main.complete_task'), data={
-                'id': task.id
-            })
-        err_msg = 'Complete task failed: completed_on is None'
+        response = self.client.post(url_for('main.tasks'), data={
+                'complete': task.id
+            },
+            follow_redirects=True)
+        err_msg = 'Complete task failed: {0}'.format(response.status_code)
         self.assertTrue(task.completed_on is not None, err_msg)
 
         # get tasks again
-        response = self.client.get(url_for('main.get_tasks'))
+        response = self.client.get(url_for('main.tasks'))
         data = response.get_data(as_text=True)
 
         err_msg = 'Get tasks failed: incomplete task not in data'
