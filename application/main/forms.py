@@ -24,3 +24,4 @@ class NewTaskForm(Form):
     deadline = DateField('Deadline')
     priority = StringField('Priority')
     priority.validators = [Length(1, MAX_LENGTH['task_priority'])]
+    submit = SubmitField('Create Task')

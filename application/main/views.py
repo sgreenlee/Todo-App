@@ -1,8 +1,9 @@
-from flask import render_template, redirect, url_for, flash
+from flask import render_template, redirect, url_for, flash, abort, request
 from flask.ext.login import current_user, login_required
+from datetime import date
 from . import main
-from .forms import EditProfileForm
-from ..models import db, User
+from .forms import EditProfileForm, NewTaskForm
+from ..models import db, User, Task
 from ..email import send_confirmation_email
 
 
@@ -43,3 +44,46 @@ def edit_profile():
     form.first_name.data = current_user.first_name
     form.last_name.data = current_user.last_name
     return render_template('edit_profile.html', form=form)
+
+
+@main.route('/tasks/add', methods=['GET', 'POST'])
+@login_required
+def add_task():
+    """Create a new task for the current user."""
+    form = NewTaskForm()
+    if form.validate_on_submit():
+        new_task = Task(
+            user=current_user.id,
+            description=form.description.data,
+            deadline=form.deadline.data,
+            priority=form.priority.data)
+        db.session.add(new_task)
+        db.session.commit()
+        flash("Your new task has been created.")
+        return redirect(url_for('main.tasks'))
+    return render_template('add_task.html', form=form)
+
+
+@main.route('/tasks', methods=['GET', 'POST'])
+@login_required
+def tasks():
+    """Get incomplete tasks for the current user and mark tasks as complete."""
+    if request.method == 'GET':
+        qry = Task.query.filter_by(user=current_user.id)
+        tasks = qry.filter_by(completed_on=None).all()
+        return render_template('get_tasks.html', tasks=tasks)
+    elif request.method == 'POST':
+        try:
+            task_id = request.form.get('complete')
+            task = Task.query.get(task_id)
+            # if task does not belong to current user
+            # raise 403 error
+            if task.user != current_user.id:
+                abort(403)
+            task.completed_on = date.today()
+            db.session.add(task)
+            flash("This task has been marked as complete.")
+            return redirect(url_for('main.tasks'))
+        except:
+            # bad request
+            abort(400)

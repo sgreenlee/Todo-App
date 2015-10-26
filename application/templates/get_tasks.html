@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block page_content %}
+<div class="page-header">
+	<h1>Your tasks</h1>
+	<a href="/tasks/add">+ Add a new task</a>
+</div>
+{% for task in tasks %}
+<p>{{ task.description}}</p>
+{% endfor %}
+
+{% endblock %}
