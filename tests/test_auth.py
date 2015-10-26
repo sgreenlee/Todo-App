@@ -41,7 +41,7 @@ class TestAuth(unittest.TestCase):
             "'You have successfully registered' does not appear in response")
 
         # find new account in database
-        user = User.query.filter_by(email='sam.a.greenlee@gmail.com').first()
+        user = User.query.filter_by(email='alansmith@fakeemail.com').first()
         self.assertIsNotNone(user, 'New user not found in database')
         self.assertEqual(
             user.first_name, 'Alan',
