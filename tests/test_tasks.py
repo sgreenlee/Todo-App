@@ -20,7 +20,7 @@ class TestTasks(unittest.TestCase):
             password='llama'
             )
         db.session.add(user)
-        db.commit()
+        db.session.commit()
 
     def tearDown(self):
         db.session.remove()
