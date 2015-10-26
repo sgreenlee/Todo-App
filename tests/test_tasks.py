@@ -75,7 +75,7 @@ class TestTasks(unittest.TestCase):
             'do the laundry' in data and 'pay parking ticket' in data, err_msg)
 
         # mark a task as complete
-        task = Task.query.filer_by(description='pay parking ticket').first()
+        task = Task.query.filter_by(description='pay parking ticket').first()
         response = self.client.post(url_for('main.complete_task'), data={
                 'id': task.id
             })
