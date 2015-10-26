@@ -14,7 +14,9 @@ db = SQLAlchemy()
 MAX_LENGTH = {
     'email': 40,
     'first_name': 20,
-    'last_name': 20
+    'last_name': 20,
+    'task_desc': 128,
+    'task_priority': 12
 }
 
 
@@ -36,6 +38,7 @@ class User(UserMixin, db.Model):
         )
     password_hash = db.Column(db.String(128), nullable=False)
     is_confirmed = db.Column(db.Boolean, default=False)
+    tasks = db.relationship('Task', backref='users')
 
     @property
     def password(self):
@@ -77,4 +80,21 @@ class User(UserMixin, db.Model):
         return s.dumps({'reset': self.id})
 
     def __repr__(self):
-        return "<User object email={0}>".format(self.email)
+        return "<User object: {0}>".format(self.email)
+
+
+class Task(db.Model):
+    """Represents non-recurring tasks that are either complete or
+    incomplete."""
+
+    __tablename__ = 'tasks'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    description = db.Column(db.String(MAX_LENGTH['task_desc']), nullable=False)
+    deadline = db.Column(db.Date, default=None)
+    completed_on = db.Column(db.Date, default=None)
+    priority = db.Column(db.String(MAX_LENGTH['task_priority']), default=None)
+
+    def __repr__(self):
+        return "<Task object: {0}>".format(self.description)
