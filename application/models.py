@@ -17,6 +17,8 @@ MAX_LENGTH = {
     'last_name': 20,
     'task_desc': 128,
     'task_priority': 12
+    'project_name': 20,
+    'project_desc': 128
 }
 
 
@@ -98,3 +100,26 @@ class Task(db.Model):
 
     def __repr__(self):
         return "<Task object: {0}>".format(self.description)
+
+
+class Project(db.Model):
+    """Represents long-running projects with defined time goals."""
+
+    __tablename__ = 'projects'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    name = db.Column(db.String(MAX_LENGTH['project_name']), nullable=False)
+    description = db.Column(db.String(MAX_LENGTH['project_desc']))
+
+    def time_contributed(self, to=None, from=None):
+        """Return amount of time contributed to a project between optional
+        date limits from and to."""
+
+        raise NotImplemented
+
+    def time_goal(self, date=None):
+        """Return user goal for amount of time contributed to this project
+        on date. If no date supplied, return goal for today."""
+
+        raise NotImplemented
