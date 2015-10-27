@@ -1,6 +1,7 @@
 from flask.ext.sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+import datetime
 from flask.ext.login import UserMixin
 from flask.ext.login import LoginManager
 from flask import current_app
@@ -122,9 +123,9 @@ class Project(db.Model):
     name = db.Column(db.String(MAX_LENGTH['project_name']), nullable=False)
     description = db.Column(db.String(MAX_LENGTH['project_desc']))
 
-    def time_contributed(self, to=None, from=None):
+    def time_contributed(self, start=None, end=None):
         """Return amount of time contributed to a project between optional
-        date limits from and to."""
+        date limits start and end."""
 
         raise NotImplemented
 
@@ -147,10 +148,10 @@ class Contribution(db.Model):
     time = db.Column(db.Integer, nullable=False)
     date = db.Column(db.Date)
     __table_args__ = (
-        db.CheckConstraint(time > 0, name='time is positive')
+        db.CheckConstraint(time > 0, name='time is positive'),
         )
 
-    def __init__(self, id, project, time, date=date.today()):
+    def __init__(self, id, project, time, date=datetime.date.today()):
         self.id = id
         self.project = project
         self.time = time
@@ -168,5 +169,5 @@ class Goal(db.Model):
     days = db.Column(db.Integer(), nullable=False)
     time = db.Column(db.Integer(), nullable=False)
     __table_args__ = (
-        db.CheckConstraint(time > 0, name='time is positive')
+        db.CheckConstraint(time > 0, name='time is positive'),
         )
