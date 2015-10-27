@@ -74,7 +74,7 @@ class TestModels(unittest.TestCase):
 
         # create a goal for this project
         # 30 minutes every day
-        new_goal = Goal(project=new_project.id, days=0b11111110, time=30)
+        new_goal = Goal(project=new_project.id, days=0b1111111, time=30)
         db.session.add(new_goal)
         db.session.commit()
 
@@ -83,14 +83,15 @@ class TestModels(unittest.TestCase):
 
         # create another goal
         # 15 minutes on weekdays
-        weekday_goal = Goal(project=new_project.id, days=0b00111110, time=15)
+        weekday_goal = Goal(project=new_project.id, days=0b0011111, time=15)
         db.session.add(weekday_goal)
         db.session.commit()
 
         # test Project.time_goal
-        weekday_flag = date.today().weekday() < 5
-        self.assertTrue(
-            new_project.time_goal() == 45 if weekday_flag else 30)
+        weekday = date(2015, 10, 26)
+        weekend = date(2015, 10, 25)
+        self.assertTrue(new_project.time_goal(weekday) == 45)
+        self.assertTrue(new_project.time_goal(weekend) == 30)
 
         # create a new contribution
         new_contribution = Contribution(
@@ -99,3 +100,18 @@ class TestModels(unittest.TestCase):
         db.session.commit()
 
         self.assertTrue(new_project.time_contributed() == 60)
+
+        # create an old contribution
+        old_date = date(2015, 06, 10)
+        contribution = Contribution(
+            project=new_project.id, time=20, date=old_date)
+        db.session.add(contribution)
+        db.session.commit()
+
+        self.assertTrue(new_project.time_contributed() == 80)
+
+        # test time_contributed with date range
+        start_date = date(2015, 06, 01)
+        end_date = date(2015, 07, 01)
+        self.assertTrue(
+            new_project.time_contributed(start=start_date, end=end_date) == 20)
