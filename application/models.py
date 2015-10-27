@@ -23,13 +23,13 @@ MAX_LENGTH = {
 }
 
 DAYS = {
-    'MON': 0b0000010,
-    'TUE': 0b0000100,
-    'WED': 0b0001000,
-    'THU': 0b0001000,
-    'FRI': 0b0010000,
-    'SAT': 0b0100000,
-    'SUN': 0b1000000
+    'MON': 0b0000001,
+    'TUE': 0b0000010,
+    'WED': 0b0000100,
+    'THU': 0b0000100,
+    'FRI': 0b0001000,
+    'SAT': 0b0010000,
+    'SUN': 0b0100000
 }
 
 
@@ -127,13 +127,33 @@ class Project(db.Model):
         """Return amount of time contributed to a project between optional
         date limits start and end."""
 
-        raise NotImplemented
+        sum = 0
+        qry = Contribution.query.filter_by(project=self.id)
+
+        # apply date filters
+        if start:
+            qry = qry.filter(Contribution.date >= start)
+        if end:
+            qry = qry.filter(Contribution.date <= end)
+
+        contributions = qry.all()
+        for contribution in contributions:
+            sum += contribution.time
+        return sum
 
     def time_goal(self, date=None):
         """Return user goal for amount of time contributed to this project
         on date. If no date supplied, return goal for today."""
 
-        raise NotImplemented
+        target_date = date or datetime.date.today()
+        sum = 0
+
+        goals = Goal.query.filter_by(project=self.id).all()
+        for goal in goals:
+            # check if goal applies to target date
+            if (2 ** target_date.weekday() & goal.days):
+                sum += goal.time
+        return sum
 
 
 class Contribution(db.Model):
@@ -151,8 +171,7 @@ class Contribution(db.Model):
         db.CheckConstraint(time > 0, name='time is positive'),
         )
 
-    def __init__(self, id, project, time, date=datetime.date.today()):
-        self.id = id
+    def __init__(self, project, time, date=datetime.date.today()):
         self.project = project
         self.time = time
         self.date = date
