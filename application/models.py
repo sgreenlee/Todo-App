@@ -150,6 +150,12 @@ class Contribution(db.Model):
         db.CheckConstraint(time > 0, name='time is positive')
         )
 
+    def __init__(self, id, project, time, date=date.today()):
+        self.id = id
+        self.project = project
+        self.time = time
+        self.date = date
+
 
 class Goal(db.Model):
     """Represents a time-commitment goal for a project."""
