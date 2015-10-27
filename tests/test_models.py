@@ -1,7 +1,8 @@
 import unittest
+from datetime import date
 from flask import current_app
 from application import create_app, db
-from application.models import User
+from application.models import User, Task, Project, Goal, Contribution
 
 
 class TestModels(unittest.TestCase):
@@ -60,3 +61,40 @@ class TestModels(unittest.TestCase):
         self.assertFalse(alan.confirm(token))
         self.assertTrue(steve.is_confirmed)
         self.assertFalse(alan.is_confirmed)
+
+    def test_time_goal_and_time_contributed(self):
+        steve = TestModels.create_steve()
+        db.session.add(steve)
+        db.session.commit()
+
+        # create a project
+        new_project = Project(user=steve.id, name='Learn Swedish')
+        db.session.add(new_project)
+        db.session.commit()
+
+        # create a goal for this project
+        # 30 minutes every day
+        new_goal = Goal(project=new_project.id, days=0b11111110, time=30)
+        db.session.add(new_goal)
+        db.session.commit()
+
+        # test Project.time_goal
+        self.assertTrue(new_project.time_goal() == 30)
+
+        # create another goal
+        # 15 minutes on weekdays
+        weekday_goal = Goal(project=new_project.id, days=0b00111110, time=15)
+        db.session.add(weekday_goal)
+        db.session.commit()
+
+        # test Project.time_goal
+        self.assertTrue(
+            new_project.time_goal() == 45 if date.today().is_weekday() else 30)
+
+        # create a new contribution
+        new_contribution = Contribution(
+            project=new_project.id, time=60)
+        db.session.add(new_contribution)
+        db.session.commit()
+
+        self.assertTrue(new_project.time_contributed == 60)
