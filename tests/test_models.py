@@ -88,7 +88,7 @@ class TestModels(unittest.TestCase):
         db.session.commit()
 
         # test Project.time_goal
-        weekday_flag = date.today().isoweekday() <= 5
+        weekday_flag = date.today().weekday() < 5
         self.assertTrue(
             new_project.time_goal() == 45 if weekday_flag else 30)
 
@@ -98,4 +98,4 @@ class TestModels(unittest.TestCase):
         db.session.add(new_contribution)
         db.session.commit()
 
-        self.assertTrue(new_project.time_contributed == 60)
+        self.assertTrue(new_project.time_contributed() == 60)
