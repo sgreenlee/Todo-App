@@ -21,6 +21,16 @@ MAX_LENGTH = {
     'project_desc': 128
 }
 
+DAYS = {
+    'MON': 0b0000010,
+    'TUE': 0b0000100,
+    'WED': 0b0001000,
+    'THU': 0b0001000,
+    'FRI': 0b0010000,
+    'SAT': 0b0100000,
+    'SUN': 0b1000000
+}
+
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -123,3 +133,34 @@ class Project(db.Model):
         on date. If no date supplied, return goal for today."""
 
         raise NotImplemented
+
+
+class Contribution(db.Model):
+    """Represents a discrete amount of time (in minutes) contributed to a
+    project."""
+
+    __tablename__ = 'contributions'
+
+    id = db.Column(db.Integer, primary_key=True)
+    project = db.Column(db.Integer, db.ForeignKey('projects.id'),
+                        nullable=False)
+    time = db.Column(db.Integer, nullable=False)
+    date = db.Column(db.Date)
+    __table_args__ = (
+        db.CheckConstraint(time > 0, name='time is positive')
+        )
+
+
+class Goal(db.Model):
+    """Represents a time-commitment goal for a project."""
+
+    __tablename__ = 'goals'
+
+    id = db.Column(db.Integer(), primary_key=True)
+    project = db.Column(db.Integer(), db.ForeignKey('projects.id'),
+                        nullable=False)
+    days = db.Column(db.Integer(), nullable=False)
+    time = db.Column(db.Integer(), nullable=False)
+    __table_args__ = (
+        db.CheckConstraint(time > 0, name='time is positive')
+        )
