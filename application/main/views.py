@@ -69,8 +69,7 @@ def add_task():
 def tasks():
     """Get incomplete tasks for the current user and mark tasks as complete."""
     if request.method == 'GET':
-        qry = Task.query.filter_by(user=current_user.id)
-        tasks = qry.filter_by(completed_on=None).all()
+        tasks = current_user.get_tasks()
         return render_template('get_tasks.html', tasks=tasks)
     elif request.method == 'POST':
         try:
@@ -87,3 +86,21 @@ def tasks():
         except:
             # bad request
             abort(400)
+
+
+@main.route('/projects', methods=['GET'])
+@login_required
+def projects():
+    today = date.today()
+    todays_projects = []
+    projects = current_user.get_projects()
+    # loop through user's projects if a project has active goals then append
+    # a tuple with the project's name, the time goal for today, and the
+    # amount of time contributed today to todays_projects
+    for project in projects:
+        goal = project.time_goal()
+        if goal:
+            todays_projects.append(
+                (project.id, project.name, goal,
+                 project.time_contributed(start=today)))
+    return render_template('projects.html', projects=todays_projects)
