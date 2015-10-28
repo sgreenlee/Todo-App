@@ -1,20 +1,49 @@
-#navbarMenu {
-	margin-top: auto;
-	margin-bottom: auto;
-}
-
+/* General Styles */
 
 .flex-container {
 	display: flex;
 }
 
+/* Module Styles */
 
-/* Project Styles */
+.module {
+	border: 1px solid #eee;
+	border-radius: 4px;
+}
 
-.project-status-list {
+.module-header {
+	justify-content: space-between;
+	height: 60px;
+	border-bottom: 2px solid #ccc;
+	padding: 0px 10px;
+}
+
+.module-header  a {
+	align-self: flex-end;
+	font-size: 24px;
+	margin: 10px;
+}
+
+.module-list {
 	list-style: none;
 	padding-left: 0px
 }
+
+.module-list li:last-child {
+	border: none;
+}
+
+/* Task Styles */
+
+.task {
+	min-height: 100px;
+	border-bottom: 1px solid #eee;
+	border-radius: 4px;
+	padding: 10px;
+}
+
+
+/* Project Styles */
 
 .project {
 	margin: 10px 0px;
@@ -28,8 +57,9 @@
 	justify-content: space-between;
 }
 
-.project-header div {
-	line-height: 40px;
+.project-header a {
+	align-self: flex-end;
+	margin: 5px;
 }
 
 .status-bar {
