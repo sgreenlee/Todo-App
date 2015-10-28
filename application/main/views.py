@@ -91,6 +91,15 @@ def tasks():
 @main.route('/projects', methods=['GET'])
 @login_required
 def projects():
+    """View and add time to projects with active goals for today."""
+    # if url contains query string with 'id' and 'time' params
+    # create a contribution to the project corresponding to 'id'
+    if request.args.get('id') and request.args.get('time'):
+        project_id = request.args.get('id')
+        time = int(request.args.get('time'))
+        contribution = Contribution(project=project_id, time=time)
+        db.session.add(contribution)
+        db.session.commit()
     today = date.today()
     todays_projects = []
     projects = current_user.get_projects()
@@ -104,3 +113,27 @@ def projects():
                 (project.id, project.name, goal,
                  project.time_contributed(start=today)))
     return render_template('projects.html', projects=todays_projects)
+
+
+@main.route('/dashboard')
+@login_required
+def dashboard():
+    """Show current user's tasks and projects."""
+    #  Tasks
+    tasks = current_user.get_tasks()
+
+    #  Projects
+    today = date.today()
+    todays_projects = []
+    projects = current_user.get_projects()
+    # loop through user's projects if a project has active goals then append
+    # a tuple with the project's name, the time goal for today, and the
+    # amount of time contributed today to todays_projects
+    for project in projects:
+        goal = project.time_goal()
+        if goal:
+            todays_projects.append(
+                (project.id, project.name, goal,
+                 project.time_contributed(start=today)))
+    return render_template(
+        'dashboard.html', tasks=tasks, projects=todays_projects)

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block page_content %}
+
+<div class="page-header">
+	<h1>Dashboard</h1>
+</div>
+
+<div class="col-md-3">
+	{% include 'tasks_module.html' %}
+</div>
+<div class="col-md-6">
+	{% include 'projects_module.html' %}
+</div>
+<div class="col-md-3">
+	<div class="module" style="height:600px;">
+		<div class="module-header flex-container">
+			<h3>Appointments</h3>
+			<a href="">+</a>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/projects.js') }}"></script>
+{% endblock %}
