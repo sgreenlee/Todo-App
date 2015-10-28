@@ -4,33 +4,12 @@
 Projects
 {% endblock %}
 
-
-{% macro render_project(id, name, goal, completed) %}
-<li class="project">
-	<div class="project-header flex-container">
-		<h4>{{ name }}</h4>
-		<div>
-			<a href="#">+ Add time to this project</a>			
-		</div>
-	</div>
-	<div class="status-bar">
-		<div class="status-bar-fill" data-complete="{{ completed }}" 
-			data-goal="{{ goal }}"></div>
-	</div>
-	<p>{{ completed }} out of {{ goal }}</p>
-</li>
-{% endmacro %}
-
 {% block page_content %}
 <div class="col-md-6">
-	<h2>Your projects</h2>
-	<ul class="project-status-list">
-		{% for project in projects %}
-		{{ render_project(*project)}}
-		{% endfor %}	
-	</ul>	
-</div>
 
+{% include 'projects_module.html' %}
+	
+</div>
 {% endblock %}
 
 {% block scripts %}

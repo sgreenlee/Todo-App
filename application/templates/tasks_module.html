@@ -1,0 +1,26 @@
+{% macro render_task(task) %}
+	<li class="task">
+		<h4>{{ task.description}}</h4>
+		<p>Deadline: {{ task.deadline.strftime('%m-%d-%Y') }}</p>
+			<form action method="post" class="form" role="form">
+				<div style="display:none;">
+					<input type="hidden" name="complete" value="{{ task.id }}">
+				</div>
+				<input class="btn btn-primary" name="submit" type="submit" value="Mark complete">
+			</form>
+	
+	</li>
+{% endmacro %}
+
+<div class="module">
+	<div class="module-header flex-container">
+		<h3>Tasks</h3>
+		<a href="">+</a>
+	</div>
+	<ul class="module-list">
+		{% for task in tasks %}
+			{{ render_task(task) }}
+		{% endfor %}
+	</ul>
+</div>
+

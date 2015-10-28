@@ -6,14 +6,6 @@
 	<a href="/tasks/add">+ Add a new task</a>
 </div>
 <div class="col-md-4">
-	{% for task in tasks %}
-	<p>{{ task.description}}</p>
-	<form action method="post" class="form" role="form">
-		<div style="display:none;">
-			<input type="hidden" name="complete" value="{{ task.id }}">
-		</div>
-		<input class="btn btn-primary" name="submit" type="submit" value="Mark complete">
-	</form>
-	{% endfor %}
+	{% include 'tasks_module.html' %}
 </div>
 {% endblock %}

@@ -1,0 +1,26 @@
+{% macro render_project(id, name, goal, completed) %}
+<li class="project">
+	<div class="project-header flex-container">
+		<h4>{{ name }}</h4>
+		<a href="#">+ Add time to this project</a>			
+	</div>
+	<div class="status-bar">
+		<div class="status-bar-fill" data-complete="{{ completed }}" 
+			data-goal="{{ goal }}"></div>
+	</div>
+	<p>{{ completed }} out of {{ goal }} minutes</p>
+</li>
+{% endmacro %}
+
+
+<div class="module">
+	<div class="flex-container module-header">
+		<h3>Your projects</h3>
+		<a href="#">+</a>
+	</div>
+	<ul class="module-list">
+		{% for project in projects %}
+		{{ render_project(*project)}}
+		{% endfor %}	
+	</ul>	
+</div>
