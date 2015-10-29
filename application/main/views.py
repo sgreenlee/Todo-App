@@ -69,7 +69,7 @@ def add_task():
 def tasks():
     """Get incomplete tasks for the current user and mark tasks as complete."""
     if request.method == 'GET':
-        tasks = current_user.get_tasks()
+        tasks = current_user.get_active_tasks()
         return render_template('get_tasks.html', tasks=tasks)
     elif request.method == 'POST':
         try:
@@ -120,7 +120,7 @@ def projects():
 def dashboard():
     """Show current user's tasks and projects."""
     #  Tasks
-    tasks = current_user.get_tasks()
+    tasks = current_user.get_active_tasks()
 
     #  Projects
     today = date.today()
