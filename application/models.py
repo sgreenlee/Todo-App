@@ -2,6 +2,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 import datetime
+import pytz
 from flask.ext.login import UserMixin
 from flask.ext.login import LoginManager
 from flask import current_app
@@ -49,6 +50,7 @@ class User(UserMixin, db.Model):
         db.String(MAX_LENGTH['last_name']),
         nullable=True
         )
+    timezone = db.Column(db.String(30), default='UTC')
     password_hash = db.Column(db.String(128), nullable=False)
     is_confirmed = db.Column(db.Boolean, default=False)
     tasks = db.relationship('Task', backref='users')
@@ -97,6 +99,13 @@ class User(UserMixin, db.Model):
         qry = Task.query.filter_by(user=self.id)
         qry = qry.filter_by(completed_on=None)
         return qry.all()
+
+    def get_local_date(self):
+        """Returns date object for user's current local date."""
+        tz = pytz.timezone(self.timezone)
+        utc = pytz.utc
+        utc_now = datetime.datetime.now(utc)
+        return utc_now.astimezone(tz).date()
 
     def __repr__(self):
         return "<User object: {0}>".format(self.email)
