@@ -107,6 +107,29 @@ class User(UserMixin, db.Model):
         utc_now = datetime.datetime.now(utc)
         return utc_now.astimezone(tz).date()
 
+    def get_project_goals(self, date=None):
+        """Returns user's project contribution goals for given date.
+        args: date - a datetime.date object, defaults to today
+        returns: a list of 3 tuples of the form
+            (project_id, project_name, time_goal)
+        """
+
+        date = date or self.get_local_date()
+        # get day bit from date
+        day_bit = 2 ** date.weekday()
+
+        # get all project goals belonging to user,
+        qry = Project.query.outerjoin(Goal).filter(Project.user == self.id)
+        # filter out inactive goals
+        qry = qry.filter(Goal.days.op('&')(day_bit) != 0)
+        # add Goal.time column to table and use in subquery
+        qry = qry.add_column(Goal.time)
+        sub = qry.subquery()
+        # use db.func.sum to get total time goal for each project
+        qry = db.session.query(sub.c.id, sub.c.name, db.func.sum(sub.c.time))
+        qry = qry.group_by(sub.c.id, sub.c.name)
+        return qry.all()
+
     def __repr__(self):
         return "<User object: {0}>".format(self.email)
 
