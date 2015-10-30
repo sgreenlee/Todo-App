@@ -2,13 +2,31 @@
 <li class="project">
 	<div class="project-header flex-container">
 		<h4>{{ name }}</h4>
-		<a href="#">+ Add time to this project</a>			
+		<div class="btn-group">
+  			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" 
+  				aria-expanded="false">
+    			<span class="caret"></span>
+  			</button>
+  			<ul class="dropdown-menu add-time-popup">
+			    <li>
+			    	<p>Add time (minutes):</p>
+			    	<form class="flex-container add-time-form" action="/projects/contribute" method="post">
+			    		<input type="hidden" name="id" value="{{ id }}">
+			    		<input class="form-control" type="number" min="0" name="time">
+			    		<input class="btn btn-primary" type="submit" name="submit" value="Add">
+			    	</form>
+			    </li>
+			    <li role="separator" class="divider"></li>
+			    <li><a href="#">Separated link</a></li>
+		  	</ul>
+		</div>		
 	</div>
 	<div class="status-bar">
 		<div class="status-bar-fill" data-complete="{{ completed }}" 
-			data-goal="{{ goal }}"></div>
+			data-goal="{{ goal }}" data-id="{{ id }}"></div>
 	</div>
-	<p>{{ completed }} out of {{ goal }} minutes</p>
+	<p><span class='completed-text' data-id="{{ id }}">{{ completed }}</span> out of 
+		<span class="goal-text" data-id="{{ id }}">{{ goal }} </span>minutes</p>
 </li>
 {% endmacro %}
 

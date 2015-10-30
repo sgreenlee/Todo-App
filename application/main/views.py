@@ -1,9 +1,10 @@
 from flask import render_template, redirect, url_for, flash, abort, request
+from flask import jsonify
 from flask.ext.login import current_user, login_required
 from datetime import date
 from . import main
 from .forms import EditProfileForm, NewTaskForm
-from ..models import db, User, Task
+from ..models import db, User, Task, Project, Contribution
 from ..email import send_confirmation_email
 
 
@@ -60,7 +61,7 @@ def add_task():
         db.session.add(new_task)
         db.session.commit()
         flash("Your new task has been created.")
-        return redirect(url_for('main.tasks'))
+        return redirect(url_for('main.dashboard'))
     return render_template('add_task.html', form=form)
 
 
@@ -70,22 +71,21 @@ def tasks():
     """Get incomplete tasks for the current user and mark tasks as complete."""
     if request.method == 'GET':
         tasks = current_user.get_active_tasks()
-        return render_template('get_tasks.html', tasks=tasks)
+        return render_template('tasks.html', tasks=tasks)
     elif request.method == 'POST':
-        try:
-            task_id = request.form.get('complete')
-            task = Task.query.get(task_id)
-            # if task does not belong to current user
-            # raise 403 error
-            if task.user != current_user.id:
-                abort(403)
-            task.completed_on = date.today()
-            db.session.add(task)
-            flash("This task has been marked as complete.")
-            return redirect(url_for('main.tasks'))
-        except:
-            # bad request
-            abort(400)
+        task_id = request.form.get('complete')
+        task = Task.query.get(task_id)
+        # if task does not belong to current user
+        # raise 403 error
+        if task.user != current_user.id:
+            response = jsonify(failed='403 not authorized')
+            response.status_code = 403
+            return response
+        task.completed_on = current_user.get_local_date()
+        db.session.add(task)
+        response = jsonify(success=task_id)
+        response.status_code = 200
+        return response
 
 
 @main.route('/projects', methods=['GET'])
@@ -115,6 +115,28 @@ def projects():
     return render_template('projects.html', projects=todays_projects)
 
 
+@main.route('/projects/contribute', methods=['POST'])
+@login_required
+def contribute_to_project():
+    project_id = int(request.form.get('id'))
+    project = Project.query.get(project_id)
+
+    if project.user != current_user.id:
+        response = jsonify(failed='403 Not authorized')
+        response.status_code = 403
+        return response
+
+    time = int(request.form.get('time'))
+    date = current_user.get_local_date()
+    contribution = Contribution(project=project_id, time=time, date=date)
+    db.session.add(contribution)
+    db.session.commit()
+
+    response = jsonify(status='success', id=project_id, time=time)
+    response.status_code = 200
+    return response
+
+
 @main.route('/dashboard')
 @login_required
 def dashboard():
@@ -124,16 +146,12 @@ def dashboard():
 
     #  Projects
     today = date.today()
-    todays_projects = []
-    projects = current_user.get_projects()
-    # loop through user's projects if a project has active goals then append
-    # a tuple with the project's name, the time goal for today, and the
-    # amount of time contributed today to todays_projects
-    for project in projects:
-        goal = project.time_goal()
-        if goal:
-            todays_projects.append(
-                (project.id, project.name, goal,
-                 project.time_contributed(start=today)))
+    projects = []
+    project_goals = current_user.get_project_goals()
+    for id, name, goal in project_goals:
+        p = Project.query.get(id)
+        contributed = p.time_contributed(start=current_user.get_local_date())
+        projects.append((id, name, goal, contributed))
+
     return render_template(
-        'dashboard.html', tasks=tasks, projects=todays_projects)
+        'dashboard.html', tasks=tasks, projects=projects)

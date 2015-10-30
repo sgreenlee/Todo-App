@@ -9,6 +9,7 @@
 .module {
 	border: 1px solid #eee;
 	border-radius: 4px;
+	margin-bottom: 20px;
 }
 
 .module-header {
@@ -80,4 +81,42 @@
 
 .project p {
 	margin: 8px 4px;
+}
+
+.add-time-popup li p {
+	padding: 6px 10px;
+}
+
+.add-time-popup form {
+	padding: 10px, 0px;
+}
+
+.add-time-popup form .btn {
+	height: 34px;
+}
+
+.add-time-popup form .form-control {
+	width: 50%;
+	margin: 0px 10px;
+}
+
+/* modal styles */
+
+#add-time-modal {
+	width: 200px;
+	height: 150px;
+	margin: 100px;
+	border: 1px solid #eee;
+	padding: 15px;
+	position: absolute;
+	z-index: 99;
+}
+
+.modal-close {
+	width: 20px;
+	height: 20px;
+	border: 1px solid #eee;
+	border-radius: 15px;
+	position: absolute;
+	top: 500px;
 }
