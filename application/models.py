@@ -126,8 +126,23 @@ class User(UserMixin, db.Model):
         qry = qry.add_column(Goal.time)
         sub = qry.subquery()
         # use db.func.sum to get total time goal for each project
-        qry = db.session.query(sub.c.id, sub.c.name, db.func.sum(sub.c.time))
-        qry = qry.group_by(sub.c.id, sub.c.name)
+        qry = db.session.query(sub.c.id, sub.c.name,
+                               db.func.sum(sub.c.time).label('goal'))
+        qry = qry.group_by(sub.c.id, sub.c.name).order_by(sub.c.id)
+        return qry.all()
+
+    def get_project_contributions(self, date=None):
+
+        date = date or self.get_local_date()
+
+        qry = Project.query.outerjoin(Contribution)
+        qry = qry.filter(Project.user == self.id)
+        qry = qry.filter(Contribution.date == date)
+        qry = qry.add_column(Contribution.time)
+        sub = qry.subquery()
+        qry = db.session.query(sub.c.id, sub.c.name,
+                               db.func.sum(sub.c.time).label('contributed'))
+        qry = qry.group_by(sub.c.id, sub.c.name).order_by(sub.c.id)
         return qry.all()
 
     def __repr__(self):
