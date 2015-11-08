@@ -1,6 +1,7 @@
 from flask.ext.wtf import Form
-from wtforms import StringField, DateField, SubmitField, ValidationError
-from wtforms.validators import Required, Email, Length
+from wtforms import StringField, SubmitField, ValidationError
+from wtforms.fields.html5 import DateField
+from wtforms.validators import Required, Email, Length, Optional
 from ..models import MAX_LENGTH, User, Task
 
 
@@ -21,7 +22,7 @@ class NewTaskForm(Form):
     """Form for creating a new task."""
     description = StringField('Description')
     description.validators = [Length(1, MAX_LENGTH['task_desc'])]
-    deadline = DateField('Deadline')
+    deadline = DateField('Deadline', validators=[Optional()])
     priority = StringField('Priority')
     priority.validators = [Length(1, MAX_LENGTH['task_priority'])]
     submit = SubmitField('Create Task')
