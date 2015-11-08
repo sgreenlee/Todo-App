@@ -1,3 +1,4 @@
+{% import 'bootstrap/wtf.html' as wtf %}
 {% extends 'base.html' %}
 
 {% block title %}
@@ -24,11 +25,14 @@ Dashboard
 		</div>
 	</div>
 </div>
+{% endblock %}
 
-
+{% block modals %}
+	{% include 'modals.html' %}
 {% endblock %}
 
 {% block scripts %}
 {{ super() }}
 <script src="{{ url_for('static', filename='js/projects.js') }}"></script>
+<script src="{{ url_for('static', filename='js/modal.js') }}"></script>
 {% endblock %}

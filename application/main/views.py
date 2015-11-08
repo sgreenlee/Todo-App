@@ -141,10 +141,10 @@ def contribute_to_project():
 @login_required
 def dashboard():
     """Show current user's tasks and projects."""
-    #  Tasks
+    # Tasks
     tasks = current_user.get_active_tasks()
 
-    #  Projects
+    # Projects
     today = date.today()
     projects = []
     project_goals = current_user.get_project_goals()
@@ -153,5 +153,9 @@ def dashboard():
         contributed = p.time_contributed(start=current_user.get_local_date())
         projects.append((id, name, goal, contributed))
 
+    # Forms
+    task_form = NewTaskForm()
+
     return render_template(
-        'dashboard.html', tasks=tasks, projects=projects)
+        'dashboard.html', tasks=tasks, projects=projects,
+        task_form=task_form)

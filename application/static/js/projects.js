@@ -42,8 +42,6 @@ MY_FUNCS.submitAddTime = function(event) {
 		data[name] = value;
 	});
 
-	console.log(data);
-
 	$.ajax(url="/projects/contribute", settings={
 		'data': data,
 		'method': 'post',
@@ -57,7 +55,7 @@ MY_FUNCS.submitAddTime = function(event) {
 			bar.attr('data-complete', complete);
 			MY_FUNCS.refreshStatusBars();
 
-			$('.completed-text[data-id=' + id + ']').text(complete);
+			$('.completed-text[data-id=' + 	id + ']').text(complete);
 		}
 	});
 
