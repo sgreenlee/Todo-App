@@ -21,7 +21,7 @@ class EditProfileForm(Form):
 class NewTaskForm(Form):
     """Form for creating a new task."""
     description = StringField('Description')
-    description.validators = [Length(1, MAX_LENGTH['task_desc'])]
+    description.validators = [Required(), Length(1, MAX_LENGTH['task_desc'])]
     deadline = DateField('Deadline', validators=[Optional()])
     priority = StringField('Priority')
     priority.validators = [Length(1, MAX_LENGTH['task_priority'])]
