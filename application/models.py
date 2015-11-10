@@ -23,7 +23,8 @@ MAX_LENGTH = {
     'project_desc': 128
 }
 
-DAYS = {
+# mapping from string to binary representation of days
+DAY_BITS = {
     'MON': 0b0000001,
     'TUE': 0b0000010,
     'WED': 0b0000100,
@@ -54,6 +55,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128), nullable=False)
     is_confirmed = db.Column(db.Boolean, default=False)
     tasks = db.relationship('Task', backref='users')
+    projects = db.relationship('Project', backref='users')
 
     @property
     def password(self):
@@ -175,6 +177,7 @@ class Project(db.Model):
     user = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     name = db.Column(db.String(MAX_LENGTH['project_name']), nullable=False)
     description = db.Column(db.String(MAX_LENGTH['project_desc']))
+    goals = db.relationship('Goal', backref='projects')
 
     def time_contributed(self, start=None, end=None):
         """Return amount of time contributed to a project between optional
@@ -207,6 +210,19 @@ class Project(db.Model):
             if (2 ** target_date.weekday() & goal.days):
                 sum += goal.time
         return sum
+
+    def to_dict(self, with_goals=True):
+        """Return a dictionary representation of this project.
+        If with_goals is true, then include a list of this projects goals."""
+
+        project_dict = dict(id=self.id, user=self.user, name=self.name,
+                            description=self.description)
+
+        # if with_goals, add list of goals to project dict
+        if with_goals:
+            project_dict['goals'] = [goal.to_dict() for goal in self.goals]
+
+        return project_dict
 
 
 class Contribution(db.Model):
@@ -241,5 +257,12 @@ class Goal(db.Model):
     days = db.Column(db.Integer(), nullable=False)
     time = db.Column(db.Integer(), nullable=False)
     __table_args__ = (
-        db.CheckConstraint(time > 0, name='time is positive'),
-        )
+        db.CheckConstraint(time > 0, name='time is positive'),)
+
+    def to_dict(self):
+
+        # convert binary representation of days into list of strings
+        days = [day for day, bit in DAY_BITS.iteritems() if bit & self.days]
+
+        return dict(id=self.id, project=self.project, days=days,
+                    time=self.time)
