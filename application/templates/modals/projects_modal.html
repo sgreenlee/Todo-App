@@ -1,0 +1,43 @@
+<div id="modal-add-task" class="modal-content">
+	<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        	<span aria-hidden="true">&times;</span>
+        </button>
+        <div class="flex-container">
+              <h4 class="modal-title">Projects</h4>
+              <a href="">+ Add a new project</a>
+        </div>
+    </div>
+    <div class="modal-body">
+        <ul class="modal-list">
+            {% for project in projects %}
+            <!-- render project -->
+                <li>
+                    <div class="flex-container modal-project-header">
+                        <h4>{{ project.name }}</h4>
+                        <a href="">Add a goal to this project</a>
+                    </div>
+                    <ul class="modal-list goal-list">
+                        {% for goal in project['goals'] %}
+                        <li>
+                            <b>Goal:</b> {{goal.time}} minutes on
+                            <div class="weekday-indicator">
+                                <ul class="weekdays">
+                                    {% for day in ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] %}
+                                        <li {{'active' if day in goal.days else ''}}>{{day}}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="flex-container goal-footer">
+                                <a href="#">Edit</a>
+                                <a href="">Delete</a>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    
+                </li>
+            {% endfor %}
+        </ul>
+    </div>	
+</div>

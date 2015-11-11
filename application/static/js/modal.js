@@ -1,3 +1,4 @@
+// modal window object
 var modal = (function(){
 
 	var $window = $(window);
@@ -10,19 +11,12 @@ var modal = (function(){
 	});
 
 	$backdrop.css({
-		backgroundColor: '#AAA',
+		backgroundColor: '#666',
 		opacity: 0.5,
 		width: $window.width(),
 		height: $window.height(),
 		top: 0,
 		left: 0
-	});
-
-	var $close = $('.modal-header button.close');
-
-	$close.on('click', function(event){
-		event.preventDefault();
-		modal.close();
 	});
 
 	$backdrop.on('click', function(event){
@@ -41,8 +35,8 @@ var modal = (function(){
 
 			// set modal position
 			$modal.css({
-				top: top + $window.scrollTop(),
-				left: left + $window.scrollLeft()
+				top: top,
+				left: left
 			});
 
 			// resize the backdrop
@@ -52,23 +46,31 @@ var modal = (function(){
 			});
 		},
 
-		open: function(content_id){
+		open: function(content){
 			// open modal window with specified content
 
 			// load modal content
-			var content = $(content_id);
+			// var content = $(content);
+			$modal.empty();
 			$modal.append(content);	
 
-
+			content.fadeIn(400);
 			modal.center();
 
 			// load backdrop
 			$backdrop.fadeIn(300);
 			$modal.slideDown(500);
-			content.fadeIn(400);
+			
 
 			// attach event handler to center modal on window resize
 			$window.on('resize', modal.center);
+
+
+			var $close = $('.modal-header button.close');
+			$close.on('click', function(event){
+				event.preventDefault();
+				modal.close();
+			});
 		},
 	
 		close : function(){
@@ -87,17 +89,39 @@ var modal = (function(){
 			}, 500);
 
 			// remove event handler from window
-			$window.off('resize', modal.center());
+			$window.off('resize', modal.center);
 		}
 	};
 })();
+
+var modalCache = {};
 
 
 // attach event handlers for opening modal windows
 
 // open new task modal
 $('#add-task-link').on('click', function (event) {
-	// body.
 	event.preventDefault();
-	modal.open('#modal-add-task');
+	if (!modalCache.tasks) {
+		$.get('/modals/tasks/new', success=function(data) {
+			modalCache.tasks = $(data);
+			modal.open(modalCache.tasks);
+		});
+	}
+	else
+		modal.open(modalCache.tasks);
+	
+});
+
+// open projects modal
+$('#project-modal-open').on('click', function(event) {
+	event.preventDefault();
+	if (!modalCache.projects) {
+		$.get('/modals/projects', success=function(data) {
+			modalCache.projects = $(data);
+			modal.open(modalCache.projects);
+		});
+	}
+	else
+		modal.open(modalCache.projects);
 });

@@ -17,7 +17,7 @@ MAX_LENGTH = {
     'email': 40,
     'first_name': 20,
     'last_name': 20,
-    'task_desc': 128,
+    'task_desc': 30,
     'task_priority': 12,
     'project_name': 20,
     'project_desc': 128
@@ -25,13 +25,13 @@ MAX_LENGTH = {
 
 # mapping from string to binary representation of days
 DAY_BITS = {
-    'MON': 0b0000001,
-    'TUE': 0b0000010,
-    'WED': 0b0000100,
-    'THU': 0b0000100,
-    'FRI': 0b0001000,
-    'SAT': 0b0010000,
-    'SUN': 0b0100000
+    'Mon': 0b0000001,
+    'Tue': 0b0000010,
+    'Wed': 0b0000100,
+    'Thu': 0b0000100,
+    'Fri': 0b0001000,
+    'Sat': 0b0010000,
+    'Sun': 0b0100000
 }
 
 

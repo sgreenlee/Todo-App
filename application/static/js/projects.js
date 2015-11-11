@@ -20,7 +20,7 @@ MY_FUNCS.submitTaskComplete = function(event) {
 	var btn = $(event.target);
 	var id = btn.attr('data-id');
 	$.ajax(url='/tasks', {
-		'data-type': 'json',
+		'dataType': 'json',
 		'method': 'post',
 		'data': {'complete': id}
 	}).done(function(data){

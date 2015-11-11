@@ -153,9 +153,21 @@ def dashboard():
         contributed = p.time_contributed(start=current_user.get_local_date())
         projects.append((id, name, goal, contributed))
 
-    # Forms
-    task_form = NewTaskForm()
-
     return render_template(
-        'dashboard.html', tasks=tasks, projects=projects,
-        task_form=task_form)
+        'dashboard.html', tasks=tasks, projects=projects)
+
+
+@main.route('/modals/projects')
+@login_required
+def all_projects():
+    """Get information on all user's projects and goals."""
+    projects = [project.to_dict() for project in current_user.projects]
+    return render_template('modals/projects_modal.html', projects=projects)
+
+
+@main.route('/modals/tasks/new', methods=['GET'])
+@login_required
+def new_task_modal():
+    """Create a new task for the current user."""
+    form = NewTaskForm()
+    return render_template('modals/tasks.html', form=form)
