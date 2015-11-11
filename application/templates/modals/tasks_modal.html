@@ -1,0 +1,16 @@
+{% import 'bootstrap/wtf.html' as wtf %}
+
+<!-- New Task Modal Content -->
+<div id="modal-add-task" class="modal-content">
+	<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        	<span aria-hidden="true">&times;</span>
+        </button>
+    	<h4 class="modal-title">Add a New Task</h4>
+    </div>
+    <div class="modal-body">
+    <form id="modal-task-form" action="/tasks/add" method="post" class="form" role="form">
+		{{ wtf.quick_form(form) }}
+    </form>
+    </div>	
+</div>
