@@ -170,4 +170,4 @@ def all_projects():
 def new_task_modal():
     """Create a new task for the current user."""
     form = NewTaskForm()
-    return render_template('modals/tasks.html', form=form)
+    return render_template('modals/tasks_modal.html', form=form)
