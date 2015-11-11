@@ -146,15 +146,17 @@ def dashboard():
 
     # Projects
     today = date.today()
-    projects = []
+    goals = []
     project_goals = current_user.get_project_goals()
     for id, name, goal in project_goals:
         p = Project.query.get(id)
         contributed = p.time_contributed(start=current_user.get_local_date())
-        projects.append((id, name, goal, contributed))
+        goals.append((id, name, goal, contributed))
+
+    projects = [project.to_dict() for project in current_user.projects]
 
     return render_template(
-        'dashboard.html', tasks=tasks, projects=projects)
+        'dashboard.html', tasks=tasks, goals=goals, projects=projects)
 
 
 @main.route('/modals/projects')

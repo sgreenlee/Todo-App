@@ -73,3 +73,39 @@ $('.add-time-form').on('submit', function(event) {
 });
 
 $(window).load(MY_FUNCS.refreshStatusBars);
+
+
+// set up event handlers for tabbed navigation in modules
+$('.module-nav a').on('click', function (event) {
+	//
+	event.preventDefault();
+	var $this = $(event.target);
+	var $newTab = $this.parent();
+	console.log($newTab)
+	if ($newTab.hasClass('active'))
+		// if clicked-on tab is already active, do nothing
+		return;
+
+	else {
+		// find new content panel
+		var targetId = $newTab.data('target');
+		console.log(targetId)
+		var $newContent = $('#' + targetId);
+
+		// find old tab and content panel
+		var $oldTab = $('.module-nav li.active');
+		var $oldContent = $('.module-content.active');
+
+		// remove active classes from old tab and content
+		// and add to new tab and content
+		$oldTab.removeClass('active');
+		$oldContent.removeClass('active');
+
+		$newTab.addClass('active');
+		$newContent.addClass('active');
+
+
+	}
+
+
+});

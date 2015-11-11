@@ -33,12 +33,59 @@
 
 <div class="module">
 	<div class="flex-container module-header">
-		<h3>Your projects</h3>
-		<a id="project-modal-open" href="/projects/all">Manage</a>
+		<h3>Projects</h3>
+		<ul class="module-nav flex-container">
+			<li class="active" data-target="todays-goals"><a href="">Today's Goals</a></li>
+			<li data-target="view-all-projects"><a href="" >View All</a></li>
+			<li><a href="">+ New Project</a></li>
+		</ul>
 	</div>
-	<ul class="module-list">
-		{% for project in projects %}
-		{{ render_project(*project)}}
-		{% endfor %}	
-	</ul>	
+	<div class="module-body">
+
+		<!--  BEGIN TODAY'S GOALS -->
+		<div id="todays-goals" class="module-content active">
+			<ul class="module-list">
+				{% for goal in goals %}
+				{{ render_project(*goal)}}
+				{% endfor %}	
+			</ul>
+		</div>
+		<!-- END TODAY'S GOALS -->
+
+
+		<!-- BEGIN VIEW ALL -->
+		<div id="view-all-projects" class="module-content">
+		        <ul class="module-list">
+		            {% for project in projects %}
+		            <!-- render project -->
+		                <li class="project">
+		                    <div class="flex-container project-header">
+		                        <h4>{{ project.name }}</h4>
+		                        <a href="">Add a goal to this project</a>
+		                    </div>
+		                    <ul class="module-list goal-list">
+		                        {% for goal in project['goals'] %}
+		                        <li>
+		                            <b>Goal:</b> {{goal.time}} minutes on
+		                            <ul class="weekdays flex-container">
+	                                    {% for day in ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] %}
+	                                        <li {{'active' if day in goal.days else ''}}>{{day}}</li>
+	                                    {% endfor %}
+		                            </ul>
+		                            <div class="flex-container goal-footer">
+		                                <a href="#">Edit</a>
+		                                <a href="">Delete</a>
+		                            </div>
+		                        </li>
+		                        {% endfor %}
+		                    </ul>
+		                    
+		                </li>
+		            {% endfor %}
+		        </ul>	
+		</div>
+		<!-- END VIEW ALL -->
+
+	</div>
+
 </div>
