@@ -1,11 +1,20 @@
 from flask import render_template, redirect, url_for, flash, abort, request
-from flask import jsonify
+from flask import jsonify, session
 from flask.ext.login import current_user, login_required
 from datetime import date
 from . import main
 from .forms import EditProfileForm, NewTaskForm
 from ..models import db, User, Task, Project, Contribution
 from ..email import send_confirmation_email
+import random
+import string
+
+
+def generate_csrf_token():
+    """Return random string for CSRF token"""
+    token = [random.choice(string.ascii_letters + string.digits)
+             for _ in range(40)]
+    return ''.join(token)
 
 
 @main.route('/')
@@ -73,6 +82,16 @@ def tasks():
         tasks = current_user.get_active_tasks()
         return render_template('tasks.html', tasks=tasks)
     elif request.method == 'POST':
+
+        # check validity of csrf token
+        if request.form.get('state') != session['state']:
+            # print("\nInvalid state token")
+            # print("Token from form:", request.form.get('state'))
+            # print("Token from session:", session['state'])
+            response = jsonify(failed='403 invalid csrf token')
+            response.status_code = 403
+            return response
+
         task_id = request.form.get('complete')
         task = Task.query.get(task_id)
         # if task does not belong to current user
@@ -141,7 +160,12 @@ def contribute_to_project():
 @login_required
 def dashboard():
     """Show current user's tasks and projects."""
-    # Tasks
+
+    # Generate a csrf token and
+    # add to user session
+    session['state'] = generate_csrf_token()
+
+    # Get user's tasks
     tasks = current_user.get_active_tasks()
 
     # Projects

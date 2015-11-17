@@ -62,9 +62,16 @@ MY_FUNCS.submitAddTime = function(event) {
 	$target.find('input[type=number]').val('');
 };
 
-$('.complete-task-btn').on('click', function(event) {
+$('.complete-task-form').on('submit', function(event) {
 	event.preventDefault();
-	MY_FUNCS.submitTaskComplete(event);
+	// submit form data
+	$.post("/tasks", $(this).serialize()).done(function(data){
+		// fade task out on success
+		if (data.success){
+			var id = data.success;
+			$('.task[data-id=' + id + ']').fadeOut();
+		}
+	});
 });
 
 $('.add-time-form').on('submit', function(event) {
