@@ -125,3 +125,12 @@ $('#project-modal-open').on('click', function(event) {
 	else
 		modal.open(modalCache.projects);
 });
+
+// open delete goal modal
+$('.delete-goal-link').on('click', function(event) {
+	event.preventDefault();
+	var id = $(this).data('id');
+	$('#delete-goal-id-field').val(id);
+	console.log(id);
+	modal.open($('#modal-delete-goal'));
+});

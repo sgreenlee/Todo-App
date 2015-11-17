@@ -6,6 +6,28 @@
 <!-- Modal Backdrop -->
 <div class="modal-backdrop"></div>
 
+<!-- Delete Goal Modal Content -->
+<div id="modal-delete-goal" class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">Delete Project Goal</h4>
+    </div>
+    <div class="modal-body">
+        <p>Are you sure you want to delete this goal?</p>
+        <form action="/goals/delete" method="post" class="form delete-goal-form" role="form">
+            <div style="display:none;">
+                <input id="delete-goal-id-field" type="hidden" name="id" value="">
+                <input type="hidden" name="state" value="{{ session['state'] }}">
+            </div>
+            <input class="btn btn-primary" name="submit"
+                type="submit" value="Delete">
+        </form>
+    </div>  
+</div>
+
+{#
 <!-- New Task Modal Content -->
 <div id="modal-add-task" class="modal-content">
 	<div class="modal-header">
@@ -15,9 +37,33 @@
     	<h4 class="modal-title">Add a New Task</h4>
     </div>
     <div class="modal-body">
-    <form action="/tasks/add" method="post" class="form" role="form">
+    <form id="task-modal-form" action="/tasks/add" method="post" class="form" role="form">
 		{{ wtf.quick_form(task_form) }}
     </form>
-       
     </div>	
 </div>
+
+
+
+<!-- Projects Modal Content -->
+<div id="modal-projects" class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">Projects</h4>
+    </div>
+    <div class="modal-body">
+        <ul>
+            {% for project in projects %}
+            <!-- render project -->
+                <li>
+                    <h5>{{ project.name }}</h5>
+                    {% for goal in project['goals'] %}
+                    <p>Goal: {{goal.time}} minutes on {{ goal.days }}</p>
+                    {% endfor %}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>  
+</div> #} 

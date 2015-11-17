@@ -4,7 +4,7 @@ from flask.ext.login import current_user, login_required
 from datetime import date
 from . import main
 from .forms import EditProfileForm, NewTaskForm
-from ..models import db, User, Task, Project, Contribution
+from ..models import db, User, Task, Project, Contribution, Goal
 from ..email import send_confirmation_email
 import random
 import string
@@ -154,6 +154,34 @@ def contribute_to_project():
     response = jsonify(status='success', id=project_id, time=time)
     response.status_code = 200
     return response
+
+
+@main.route('/goals/delete', methods=['POST'])
+@login_required
+def delete_goal():
+    """Delete a project goal."""
+
+    # Check validity of csrf token
+    if request.form.get('state') != session['state']:
+        response = jsonify(failed='403 invalid csrf token')
+        response.status_code = 403
+        return response
+
+    goal_id = request.form.get('id')
+    goal = Goal.query.get(goal_id)
+
+    # Check if goal belongs to current user
+    if current_user.id != Project.query.get(goal.project).user:
+        response = jsonify(failed='403 Not authorized')
+        response.status_code = 403
+        return response
+
+    # Delete goal
+    db.session.delete(goal)
+    db.session.commit()
+
+    flash("Your project goal has been deleted.")
+    return redirect(url_for('main.dashboard'))
 
 
 @main.route('/dashboard')

@@ -2,7 +2,7 @@
 	<li class="task" data-id={{ task.id }}>
 		<h4>{{ task.description}}</h4>
 		<p>Deadline: {{ task.deadline.strftime('%m-%d-%Y') if task.deadline else 'no deadline'}}</p>
-			<form action method="post" class="form complete-task-form" role="form">
+			<form method="post" class="form complete-task-form" role="form">
 				<div style="display:none;">
 					<input type="hidden" name="complete" value="{{ task.id }}">
 					<input type="hidden" name="state" value="{{ session['state'] }}">
