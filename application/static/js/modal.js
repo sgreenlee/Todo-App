@@ -7,7 +7,8 @@ var modal = (function(){
 
 	$modal.css({
 		backgroundColor: 'white',
-		color: '#333'
+		color: '#333',
+		maxHeight: $window.height()
 	});
 
 	$backdrop.css({
@@ -54,12 +55,12 @@ var modal = (function(){
 			$modal.empty();
 			$modal.append(content);	
 
-			content.fadeIn(400);
+			content.show();
 			modal.center();
 
 			// load backdrop
-			$backdrop.fadeIn(300);
-			$modal.slideDown(500);
+			$backdrop.show();
+			$modal.slideDown(300);
 			
 
 			// attach event handler to center modal on window resize
@@ -79,8 +80,8 @@ var modal = (function(){
 			var content = $('#modal .modal-content');
 
 			// hide modal and backdrop
-			$modal.slideUp(500);
-			$backdrop.fadeOut(600);
+			$modal.slideUp(300);
+			setTimeout(300, $backdrop.fadeOut(100));
 
 			// remove content from modal
 			setTimeout(function() {
@@ -133,4 +134,76 @@ $('.delete-goal-link').on('click', function(event) {
 	$('#delete-goal-id-field').val(id);
 	console.log(id);
 	modal.open($('#modal-delete-goal'));
+});
+
+// open new project modal
+$('#add-project-link').on('click', function(event) {
+	event.preventDefault();
+	if (!modalCache.newProject) {
+		$.get('/modals/projects/new', success=function(data) {
+			var $data = $(data);
+			modalCache.newProject = $data.find('#modal-add-project');
+			var $goalForm = $data.find('.goal-form');
+
+			modal.open(modalCache.newProject);
+
+			// attach event handler to add new goals to form
+			$('.add-goal-link').on('click', function(event){
+				event.preventDefault();
+				$('.goal-form-container .goals').append($goalForm.clone(true).fadeIn());
+				modal.center();
+			});
+
+			// attach event handler to remove goals
+			$goalForm.find('button.close').click(function(event) {
+				event.preventDefault();
+				$(this).parent().remove();
+				modal.center();
+			});
+
+			
+			$('#modal-project-form').on('submit', function(event) {
+				event.preventDefault();
+
+				// get form fields
+				var name = $(this).find('input[name="name"]').val();
+				var description = $(this).find('input[name="description"]').val();
+				var csrf_token = $(this).find('input[name="csrf_token"]').val();
+
+				// get time goal data
+				var goals = [];
+				$(this).find($('li.goal-form')).each(function(){
+					var $this = $(this);
+					var time = $this.find('input[type="number"]').val();
+					var days = [];
+					$this.find('input:checked').each(function(){
+						days.push($(this).val());
+					});
+					goals.push({
+						'time' : time,
+						'days' : days
+					});
+				});
+				
+				var data = {
+					'csrf_token' : csrf_token,
+					'name' : name,
+					'description' : description,
+					'goals' : JSON.stringify(goals)
+				};
+				console.log(data);
+
+				$.post("/projects/add", data, success=function(data, textStatus) {
+					if (data.redirect) {
+						window.location.href = data.redirect;
+					}
+				});
+
+			});
+
+
+		});
+	}
+	else
+		modal.open(modalCache.newProject);
 });

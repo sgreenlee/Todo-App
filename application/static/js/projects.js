@@ -83,7 +83,7 @@ $(window).load(MY_FUNCS.refreshStatusBars);
 
 
 // set up event handlers for tabbed navigation in modules
-$('.module-nav a').on('click', function (event) {
+$('.module-nav .tab a').on('click', function (event) {
 	//
 	event.preventDefault();
 	var $this = $(event.target);

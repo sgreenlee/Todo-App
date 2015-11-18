@@ -205,7 +205,6 @@
 	position: fixed;
 	display: none;
 	z-index: 1002;
-	max-height: 550px;
 	overflow: scroll;
 }
 
@@ -229,4 +228,29 @@
 .modal-header a {
 	margin-left: 20px;
 	align-self: center;
+}
+
+/* New Project Modal Styles */
+
+.goal-form-container .goals {
+	list-style: none;
+	padding: 0px;
+	margin: 0px;
+}
+
+.weekday-buttons label {
+	font-size: 13px;
+}
+
+.goal-form-container a {
+	display: block;
+	margin-bottom: 15px;
+}
+
+.goal-form {
+	display: none;
+}
+
+.goal-form button.close {
+	margin-top: -10px;
 }

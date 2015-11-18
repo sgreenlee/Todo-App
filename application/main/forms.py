@@ -29,3 +29,10 @@ class NewTaskForm(Form):
     priority = StringField(
         'Priority', validators=[Length(0, MAX_LENGTH['task_priority'])])
     submit = SubmitField('Create Task')
+
+
+class NewProjectForm(Form):
+    """Form for creating a new project."""
+    name = StringField('Name', validators=[Required()])
+    description = StringField('Description')
+    submit = SubmitField('Create Project')

@@ -1,0 +1,69 @@
+{% import 'bootstrap/wtf.html' as wtf %}
+<div>
+    <!-- New Project Modal Content -->
+    <div id="modal-add-project" class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">Add a Project</h4>
+        </div>
+        <div class="modal-body">
+            <form id="modal-project-form" action="/projects/add" method="post" class="form" role="form">
+                {{ form.hidden_tag() }}
+                {{ wtf.form_errors(form, hiddens="only") }}
+                {{ wtf.form_field(form.name) }}
+                {{ wtf.form_field(form.description) }}
+
+                <hr>
+                
+                <div class="goal-form-container">
+                    <ul class="goals">
+
+                    </ul>
+                    <a class="add-goal-link" href="">+ Add a goal to this project</a>
+                </div>
+                
+
+                {{ wtf.form_field(form.submit) }}
+            </form>
+        </div>  
+    </div>
+
+    <!-- New Goal Section -->
+    <li class="goal-form">
+        <button type="button" class="close close-form" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="form-group">
+            <label class="control-label">Time (in minutes)</label>
+            <input class="form-control" type="number" min="1" name="time" required>        
+        </div>
+
+        <div class="btn-group weekday-buttons" data-toggle="buttons">
+          <label class="btn btn-primary" >
+            <input type="checkbox" autocomplete="off" value="Mon"> Mon
+          </label>
+          <label class="btn btn-primary">
+            <input type="checkbox" autocomplete="off" value="Tue"> Tue
+          </label>
+          <label class="btn btn-primary">
+            <input type="checkbox" autocomplete="off" value="Wed"> Wed
+          </label>
+          <label class="btn btn-primary">
+            <input type="checkbox" autocomplete="off" value="Thu"> Thu
+          </label>
+          <label class="btn btn-primary">
+            <input type="checkbox" autocomplete="off" value="Fri"> Fri
+          </label>
+          <label class="btn btn-primary">
+            <input type="checkbox" autocomplete="off" value="Sat"> Sat
+          </label>
+          <label class="btn btn-primary">
+            <input type="checkbox" autocomplete="off" value="Sun"> Sun
+          </label>
+        </div>
+        <hr>
+       
+    </li>
+</div>

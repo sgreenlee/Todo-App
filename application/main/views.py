@@ -3,11 +3,12 @@ from flask import jsonify, session
 from flask.ext.login import current_user, login_required
 from datetime import date
 from . import main
-from .forms import EditProfileForm, NewTaskForm
-from ..models import db, User, Task, Project, Contribution, Goal
+from .forms import EditProfileForm, NewTaskForm, NewProjectForm
+from ..models import db, User, Task, Project, Contribution, Goal, DAY_BITS
 from ..email import send_confirmation_email
 import random
 import string
+import json
 
 
 def generate_csrf_token():
@@ -134,6 +135,35 @@ def projects():
     return render_template('projects.html', projects=todays_projects)
 
 
+@main.route('/projects/add', methods=['GET', 'POST'])
+@login_required
+def add_project():
+    form = NewProjectForm()
+    if form.validate_on_submit():
+        # Create new project from form data
+        new_project = Project(user=current_user.id, name=form.name.data,
+                              description=form.description.data)
+        db.session.add(new_project)
+        db.session.commit()
+
+        # Create goals from form data
+        id = new_project.id
+        goals = json.loads(request.form.get('goals'))
+        for goal in goals:
+            # skip invalid goals
+            if goal['days'] == [] or int(goal['time']) == 0:
+                continue
+            days = sum([DAY_BITS[day] for day in goal['days']])
+            time = int(goal['time'])
+            db.session.add(Goal(project=id, days=days, time=time))
+        db.session.commit()
+
+        flash('Your new project has been created.')
+        response = jsonify(redirect='/dashboard')
+        response.status_code = 200
+        return response
+
+
 @main.route('/projects/contribute', methods=['POST'])
 @login_required
 def contribute_to_project():
@@ -225,3 +255,11 @@ def new_task_modal():
     """Create a new task for the current user."""
     form = NewTaskForm()
     return render_template('modals/tasks_modal.html', form=form)
+
+
+@main.route('/modals/projects/new', methods=['GET'])
+@login_required
+def new_project_modal():
+    """Create a new project for the current user."""
+    form = NewProjectForm()
+    return render_template('modals/new_project_modal.html', form=form)
