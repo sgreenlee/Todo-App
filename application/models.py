@@ -19,7 +19,7 @@ MAX_LENGTH = {
     'last_name': 20,
     'task_desc': 30,
     'task_priority': 12,
-    'project_name': 20,
+    'project_name': 40,
     'project_desc': 128
 }
 

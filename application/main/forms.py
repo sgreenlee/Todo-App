@@ -33,6 +33,13 @@ class NewTaskForm(Form):
 
 class NewProjectForm(Form):
     """Form for creating a new project."""
-    name = StringField('Name', validators=[Required()])
-    description = StringField('Description')
+
+    name = StringField(
+        'Name',
+        validators=[Length(1, MAX_LENGTH['project_name']), Required()])
+
+    description = StringField(
+        'Description',
+        validators=[Length(1, MAX_LENGTH['project_desc']), Optional()])
+
     submit = SubmitField('Create Project')
