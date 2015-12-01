@@ -191,11 +191,16 @@ $('#add-project-link').on('click', function(event) {
 					'description' : description,
 					'goals' : JSON.stringify(goals)
 				};
-				console.log(data);
 
-				$.post("/projects/add", data, success=function(data, textStatus) {
+				$.post("/modals/projects/new", data, success=function(data, textStatus) {
 					if (data.redirect) {
 						window.location.href = data.redirect;
+					}
+					else {
+						var $form = $(data).find('#new-project-form-inputs');
+						console.log($form);
+						$oldForm = modalCache.newProject.find('#new-project-form-inputs');
+						$oldForm.replaceWith($form);
 					}
 				});
 

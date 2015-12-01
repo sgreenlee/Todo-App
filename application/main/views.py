@@ -257,9 +257,32 @@ def new_task_modal():
     return render_template('modals/tasks_modal.html', form=form)
 
 
-@main.route('/modals/projects/new', methods=['GET'])
+@main.route('/modals/projects/new', methods=['GET', 'POST'])
 @login_required
 def new_project_modal():
     """Create a new project for the current user."""
     form = NewProjectForm()
+    if form.validate_on_submit():
+        # Create new project from form data
+        new_project = Project(user=current_user.id, name=form.name.data,
+                              description=form.description.data)
+        db.session.add(new_project)
+        db.session.commit()
+
+        # Create goals from form data
+        id = new_project.id
+        goals = json.loads(request.form.get('goals'))
+        for goal in goals:
+            # skip invalid goals
+            if goal['days'] == [] or int(goal['time']) == 0:
+                continue
+            days = sum([DAY_BITS[day] for day in goal['days']])
+            time = int(goal['time'])
+            db.session.add(Goal(project=id, days=days, time=time))
+        db.session.commit()
+
+        flash('Your new project has been created.')
+        response = jsonify(redirect='/dashboard')
+        response.status_code = 200
+        return response
     return render_template('modals/new_project_modal.html', form=form)

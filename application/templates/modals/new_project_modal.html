@@ -10,6 +10,7 @@
         </div>
         <div class="modal-body">
             <form id="modal-project-form" action="/projects/add" method="post" class="form" role="form">
+              <div id="new-project-form-inputs">
                 {{ form.hidden_tag() }}
                 {{ wtf.form_errors(form, hiddens="only") }}
                 {{ wtf.form_field(form.name) }}
@@ -23,8 +24,8 @@
                     </ul>
                     <a class="add-goal-link" href="">+ Add a goal to this project</a>
                 </div>
+              </div>
                 
-
                 {{ wtf.form_field(form.submit) }}
             </form>
         </div>  
