@@ -10,7 +10,14 @@
     </div>
     <div class="modal-body">
     <form id="modal-task-form" action="/tasks/add" method="post" class="form" role="form">
-		{{ wtf.quick_form(form) }}
+        <div id="new-task-form-inputs">
+           {{ form.hidden_tag() }}
+           {{ wtf.form_errors(form, hiddens="only") }}
+           {{ wtf.form_field(form.description) }}
+           {{ wtf.form_field(form.priority) }}
+           {{ wtf.form_field(form.deadline) }} 
+        </div>
+        {{ wtf.form_field(form.submit) }}
     </form>
     </div>	
 </div>

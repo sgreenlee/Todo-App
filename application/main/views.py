@@ -249,11 +249,21 @@ def all_projects():
     return render_template('modals/projects_modal.html', projects=projects)
 
 
-@main.route('/modals/tasks/new', methods=['GET'])
+@main.route('/modals/tasks/new', methods=['GET', 'POST'])
 @login_required
 def new_task_modal():
     """Create a new task for the current user."""
     form = NewTaskForm()
+    if form.validate_on_submit():
+        new_task = Task(
+            user=current_user.id,
+            description=form.description.data,
+            deadline=form.deadline.data,
+            priority=form.priority.data)
+        db.session.add(new_task)
+        db.session.commit()
+        flash("Your new task has been created.")
+        return jsonify(redirect='/dashboard')
     return render_template('modals/tasks_modal.html', form=form)
 
 

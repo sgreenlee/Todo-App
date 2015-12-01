@@ -107,6 +107,24 @@ $('#add-task-link').on('click', function (event) {
 		$.get('/modals/tasks/new', success=function(data) {
 			modalCache.tasks = $(data);
 			modal.open(modalCache.tasks);
+
+			// attach event handler for submitting new tasks
+			$('#modal-task-form').on('submit', function(event) {
+				event.preventDefault();
+				console.log($(this).serialize());
+				$.post('/modals/tasks/new', $(this).serialize(), success=function(data){
+					if (data.redirect) {
+						window.location.href = data.redirect;
+					}
+					else {
+						// update form
+						var $form = $(data).find('#new-task-form-inputs');
+						console.log($form);
+						$oldForm = modalCache.tasks.find('#new-task-form-inputs');
+						$oldForm.replaceWith($form);
+					}
+				});
+			});
 		});
 	}
 	else
@@ -161,7 +179,7 @@ $('#add-project-link').on('click', function(event) {
 				modal.center();
 			});
 
-			
+			// event handler for submitting new projects
 			$('#modal-project-form').on('submit', function(event) {
 				event.preventDefault();
 
