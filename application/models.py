@@ -120,8 +120,9 @@ class User(UserMixin, db.Model):
         # get day bit from date
         day_bit = 2 ** date.weekday()
 
-        # get all project goals belonging to user,
-        qry = Project.query.outerjoin(Goal).filter(Project.user == self.id)
+        # get all active project goals belonging to user,
+        qry = Project.query.outerjoin(Goal).filter(
+            Project.user == self.id and Project.active)
         # filter out inactive goals
         qry = qry.filter(Goal.days.op('&')(day_bit) != 0)
         # add Goal.time column to table and use in subquery
@@ -177,6 +178,7 @@ class Project(db.Model):
     user = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     name = db.Column(db.String(MAX_LENGTH['project_name']), nullable=False)
     description = db.Column(db.String(MAX_LENGTH['project_desc']))
+    active = db.Column(db.Boolean, default=True)
     goals = db.relationship('Goal', backref='projects')
 
     def time_contributed(self, start=None, end=None):
