@@ -240,6 +240,10 @@
 	margin: 0px;
 }
 
+.weekday-buttons {
+	margin-bottom: 15px;
+}
+
 .weekday-buttons label {
 	font-size: 13px;
 }

@@ -215,6 +215,44 @@ def cancel_project():
     return redirect(url_for('main.dashboard'))
 
 
+@main.route('/projects/<int:id>/goals/new', methods=['POST'])
+@login_required
+def new_goal(id):
+    """Add a new goal to a project."""
+
+    # check if specified project belongs to current user
+    project = Project.query.get(id)
+    if current_user.id != project.user:
+        response = jsonify(failed='403 Not authorized')
+        response.status_code = 403
+        return response
+
+    time = int(request.form.get('time'))
+    days = json.loads(request.form.get('days'))
+    days = sum([DAY_BITS[day] for day in days])
+
+    # validate input
+    errors = {}
+    if time == 0:
+        errors['time'] = 'Time must be a positive integer.'
+    if days == 0:
+        errors['days'] = 'You must select at least one day.'
+
+    if errors:
+        response = jsonify(errors=errors)
+        response.status_code = 400
+        return response
+
+    new_goal = Goal(project=project.id, time=time, days=days)
+    db.session.add(new_goal)
+    db.session.commit()
+
+    flash('Your new goal has been added.')
+    response = jsonify(redirect='/dashboard')
+    response.status_code = 200
+    return response
+
+
 @main.route('/goals/delete', methods=['POST'])
 @login_required
 def delete_goal():

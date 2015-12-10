@@ -154,6 +154,45 @@ $('.delete-goal-link').on('click', function(event) {
 	modal.open($('#modal-delete-goal'));
 });
 
+// open new goal modal
+$('.new-goal-link').on('click', function(event) {
+	event.preventDefault();
+	var id = $(this).data('id');
+	var $form = $('#new-goal-form');
+	$form.attr('data-project', id);
+	console.log($form.data('project'));
+	console.log(id);
+	modal.open($('#modal-new-goal'));
+
+});
+
+// event handler for submitting new goals
+$('#new-goal-form').submit(function(event) {
+	event.preventDefault();
+
+	var $this = $(this);
+	var time = $this.find('input[type="number"]').val();
+	var days = [];
+	$this.find('input:checked').each(function(){
+		days.push($(this).val());
+	});
+
+	var id = $this.data('project');
+	var url = '/projects/' + id + '/goals/new';
+
+	var data = {'time': time, 'days': JSON.stringify(days)};
+
+	console.log(JSON.stringify(data.days));
+
+	$.post(url, data=data, success=function(data){
+		if (data.redirect){
+			window.location.href = data.redirect;
+		}
+	});
+
+
+});
+
 // open cancel project modal
 $('.cancel-project-link').on('click', function(event) {
 	event.preventDefault();
