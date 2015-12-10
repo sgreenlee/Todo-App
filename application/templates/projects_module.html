@@ -59,25 +59,33 @@
 		            {% for project in projects %}
 		            <!-- render project -->
 		                <li class="project">
-		                    <div class="flex-container project-header">
+		                    <div class="project-header">
 		                        <h4>{{ project.name }}</h4>
-		                        <a href="">Add a goal to this project</a>
+								<div class="flex-container">
+									<a class="cancel-project-link" data-id="{{ project.id }}" href="">
+										Cancel this Project</a>
+									<a href="">Add a goal to this project</a>
+								</div>
 		                    </div>
 		                    <ul class="module-list goal-list">
-		                        {% for goal in project['goals'] %}
-		                        <li>
-		                            <b>Goal:</b> {{goal.time}} minutes on
-		                            <ul class="weekdays flex-container">
-	                                    {% for day in ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] %}
-	                                        <li {{'active' if day in goal.days else ''}}>{{day}}</li>
-	                                    {% endfor %}
-		                            </ul>
-		                            <div class="flex-container goal-footer">
-		                                <a href="#">Edit</a>
-		                                <a class="delete-goal-link" data-id="{{ goal.id }}" href="">Delete</a>
-		                            </div>
-		                        </li>
-		                        {% endfor %}
+		                    	{% if not project['goals'] %}
+		                    		<p>You do not have any goals set for this project.</p>
+		                    	{% else %}
+			                        {% for goal in project['goals'] %}
+			                        <li>
+			                            <b>Goal:</b> {{goal.time}} minutes on
+			                            <ul class="weekdays flex-container">
+		                                    {% for day in ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] %}
+		                                        <li {{'active' if day in goal.days else ''}}>{{day}}</li>
+		                                    {% endfor %}
+			                            </ul>
+			                            <div class="flex-container goal-footer">
+			                                <a href="#">Edit</a>
+			                                <a class="delete-goal-link" data-id="{{ goal.id }}" href="">Delete</a>
+			                            </div>
+			                        </li>
+			                        {% endfor %}
+			                    {% endif %}
 		                    </ul>
 		                    
 		                </li>

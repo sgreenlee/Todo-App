@@ -28,6 +28,27 @@
     </div>  
 </div>
 
+<!-- Cancel Project Modal Content -->
+<div id="modal-cancel-project" class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">Cancel Project</h4>
+    </div>
+    <div class="modal-body">
+        <p>Are you sure you want to Cancel this project?</p>
+        <form action="/projects/cancel" method="post" class="form cancel-project-form" role="form">
+            <div style="display:none;">
+                <input id="cancel-project-id-field" type="hidden" name="id" value="">
+                <input type="hidden" name="state" value="{{ session['state'] }}">
+            </div>
+            <input class="btn btn-primary" name="submit"
+                type="submit" value="Cancel">
+        </form>
+    </div>  
+</div>
+
 {#
 <!-- New Task Modal Content -->
 <div id="modal-add-task" class="modal-content">

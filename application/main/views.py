@@ -186,6 +186,35 @@ def contribute_to_project():
     return response
 
 
+@main.route('/projects/cancel', methods=['POST'])
+@login_required
+def cancel_project():
+    """Inactivate a project"""
+
+    # Check validity of csrf token
+    if request.form.get('state') != session['state']:
+        response = jsonify(failed='403 invalid csrf token')
+        response.status_code = 403
+        return response
+
+    project_id = request.form.get('id')
+    project = Project.query.get(project_id)
+
+    # Check if project belongs to current user
+    if current_user.id != project.user:
+        response = jsonify(failed='403 Not authorized')
+        response.status_code = 403
+        return response
+
+    # Inactivate project
+    project.active = False
+    db.session.add(project)
+    db.session.commit()
+
+    flash("Your project has been canceled.")
+    return redirect(url_for('main.dashboard'))
+
+
 @main.route('/goals/delete', methods=['POST'])
 @login_required
 def delete_goal():
@@ -235,7 +264,8 @@ def dashboard():
         contributed = p.time_contributed(start=current_user.get_local_date())
         goals.append((id, name, goal, contributed))
 
-    projects = [project.to_dict() for project in current_user.projects]
+    projects = [project.to_dict() for project in current_user.projects
+                if project.active]
 
     return render_template(
         'dashboard.html', tasks=tasks, goals=goals, projects=projects)

@@ -154,6 +154,14 @@ $('.delete-goal-link').on('click', function(event) {
 	modal.open($('#modal-delete-goal'));
 });
 
+// open cancel project modal
+$('.cancel-project-link').on('click', function(event) {
+	event.preventDefault();
+	var id = $(this).data('id');
+	$('#cancel-project-id-field').val(id);
+	modal.open($('#modal-cancel-project'));
+});
+
 // open new project modal
 $('#add-project-link').on('click', function(event) {
 	event.preventDefault();
