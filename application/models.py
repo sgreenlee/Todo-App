@@ -121,8 +121,8 @@ class User(UserMixin, db.Model):
         day_bit = 2 ** date.weekday()
 
         # get all active project goals belonging to user,
-        qry = Project.query.outerjoin(Goal).filter(
-            Project.user == self.id and Project.active)
+        qry = Project.query.filter_by(active=True).outerjoin(Goal).filter(
+            Project.user == self.id)
         # filter out inactive goals
         qry = qry.filter(Goal.days.op('&')(day_bit) != 0)
         # add Goal.time column to table and use in subquery
