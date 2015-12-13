@@ -215,15 +215,21 @@ def cancel_project():
     return redirect(url_for('main.dashboard'))
 
 
-@main.route('/projects/<int:id>/goals/new', methods=['POST'])
+@main.route('/projects/<int:project_id>/goals/new', methods=['POST'])
 @login_required
-def new_goal(id):
+def new_goal(project_id):
     """Add a new goal to a project."""
 
     # check if specified project belongs to current user
-    project = Project.query.get(id)
+    project = Project.query.get(project_id)
     if current_user.id != project.user:
         response = jsonify(failed='403 Not authorized')
+        response.status_code = 403
+        return response
+
+    # check csrf token
+    if session['state'] != request.form.get('state'):
+        response = jsonify(failed='403 invalid csrf token')
         response.status_code = 403
         return response
 

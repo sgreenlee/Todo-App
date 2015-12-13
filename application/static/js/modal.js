@@ -179,10 +179,13 @@ $('#new-goal-form').submit(function(event) {
 
 	var id = $this.data('project');
 	var url = '/projects/' + id + '/goals/new';
+	var state = $this.find('input[name="state"]').val()
 
-	var data = {'time': time, 'days': JSON.stringify(days)};
-
-	console.log(JSON.stringify(data.days));
+	var data = {
+		'time': time,
+		'days': JSON.stringify(days),
+		'state': state
+	};
 
 	$.post(url, data=data, success=function(data){
 		if (data.redirect){
