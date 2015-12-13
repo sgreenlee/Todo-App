@@ -73,16 +73,17 @@
 		                    		<p>You do not have any goals set for this project.</p>
 		                    	{% else %}
 			                        {% for goal in project['goals'] %}
-			                        <li>
+			                        <li class="goal" data-id="{{ goal.id }}">
 			                            <b>Goal:</b> {{goal.time}} minutes on
 			                            <ul class="weekdays flex-container">
 		                                    {% for day in ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] %}
-		                                        <li {{'active' if day in goal.days else ''}}>{{day}}</li>
+		                                        <li data-day="{{day}}" {{'active' if day in goal.days else ''}}>{{day}}</li>
 		                                    {% endfor %}
 			                            </ul>
 			                            <div class="flex-container goal-footer">
-			                                <a href="#">Edit</a>
-			                                <a class="delete-goal-link" data-id="{{ goal.id }}" href="">Delete</a>
+			                                <a class="edit-goal-link" data-id="{{ goal.id }}" data-time="{{goal.time}}" href="#">
+			                                	Edit Goal</a>
+			                                <a class="delete-goal-link" data-id="{{ goal.id }}" href="">Delete Goal</a>
 			                            </div>
 			                        </li>
 			                        {% endfor %}

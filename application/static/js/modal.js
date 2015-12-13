@@ -203,6 +203,8 @@ $('.edit-goal-link').on('click', function(event) {
 	var time = $this.data('time');
 	var $form = $('#edit-goal-form');
 	$form.attr('data-project', id);
+	$form.find('.weekday-buttons label').removeClass('active');
+	$form.find('.weekday-buttons input').prop('checked', false);
 
 	var $days = $('li.goal[data-id=' + id + '] ul.weekdays li[active]');
 	$days.each(function(){
