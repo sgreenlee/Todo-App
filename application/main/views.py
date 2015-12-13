@@ -287,6 +287,38 @@ def delete_goal():
     return redirect(url_for('main.dashboard'))
 
 
+@main.route('/goals/<int:goal_id>/edit', methods=['POST'])
+@login_required
+def edit_goal(goal_id):
+    """Edit a project goal."""
+    # confirm that goal belongs to user
+    goal = Goal.query.get(goal_id)
+    project = Project.query.get(goal.project)
+    if project.user != current_user.id:
+        response = jsonify(failed='403 Not authorized')
+        response.status_code = 403
+        return response
+
+    # validate csrf token
+    if session['state'] != request.form.get('state'):
+        response = jsonify(failed='403 invalid csrf token')
+        response.status_code = 403
+        return response
+
+    time = int(request.form.get('time'))
+    days = json.loads(request.form.get('days'))
+    days = sum([DAY_BITS[day] for day in days])
+    goal.time = time
+    goal.days = days
+    db.session.add(goal)
+    db.session.commit()
+
+    flash("Your goal has been updated")
+    response = jsonify(redirect='/dashboard')
+    response.status_code = 200
+    return response
+
+
 @main.route('/dashboard')
 @login_required
 def dashboard():

@@ -77,6 +77,55 @@
     </div>
 </div>
 
+<!-- Edit Goal Modal Content -->
+<div id="modal-edit-goal" class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">Edit this goal</h4>
+    </div>
+    <div class="modal-body">
+        <form id="edit-goal-form" data-project="1" method="post">
+            <div style="display:none;">
+                <input type="hidden" name="state" value="{{ session['state'] }}">
+            </div>
+            <div class="form-group">
+                <label class="control-label">Time (in minutes)</label>
+                <input class="form-control" type="number" min="1" name="time" required>        
+            </div>
+
+            <div class="btn-group weekday-buttons" data-toggle="buttons">
+              <label class="btn btn-primary" >
+                <input type="checkbox" autocomplete="off" value="Mon"> Mon
+              </label>
+              <label class="btn btn-primary">
+                <input type="checkbox" autocomplete="off" value="Tue"> Tue
+              </label>
+              <label class="btn btn-primary">
+                <input type="checkbox" autocomplete="off" value="Wed"> Wed
+              </label>
+              <label class="btn btn-primary">
+                <input type="checkbox" autocomplete="off" value="Thu"> Thu
+              </label>
+              <label class="btn btn-primary">
+                <input type="checkbox" autocomplete="off" value="Fri"> Fri
+              </label>
+              <label class="btn btn-primary">
+                <input type="checkbox" autocomplete="off" value="Sat"> Sat
+              </label>
+              <label class="btn btn-primary">
+                <input type="checkbox" autocomplete="off" value="Sun"> Sun
+              </label>
+            </div>
+            <br>
+
+            <input class="btn btn-default" name="submit"
+                        type="submit" value="Edit goal">
+        </form>
+    </div>
+</div>
+
 <!-- Cancel Project Modal Content -->
 <div id="modal-cancel-project" class="modal-content">
     <div class="modal-header">

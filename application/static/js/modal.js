@@ -192,8 +192,58 @@ $('#new-goal-form').submit(function(event) {
 			window.location.href = data.redirect;
 		}
 	});
+});
 
+// open edit goal modal
+$('.edit-goal-link').on('click', function(event) {
+	event.preventDefault();
 
+	var $this = $(this);
+	var id = $this.data('id');
+	var time = $this.data('time');
+	var $form = $('#edit-goal-form');
+	$form.attr('data-project', id);
+
+	var $days = $('li.goal[data-id=' + id + '] ul.weekdays li[active]');
+	$days.each(function(){
+		var day = $(this).data('day');
+		var checkbox = $form.find('input[value=' + day + ']');
+		checkbox.prop('checked', true)
+		checkbox.parent().addClass('active');
+	});
+	
+	$form.find('input[name="time"]').val(time);
+
+	modal.open($('#modal-edit-goal'));
+
+});
+
+// event handler for editing goals
+$('#edit-goal-form').submit(function(event) {
+	event.preventDefault();
+
+	var $this = $(this);
+	var time = $this.find('input[type="number"]').val();
+	var days = [];
+	$this.find('input:checked').each(function(){
+		days.push($(this).val());
+	});
+
+	var id = $this.data('project');
+	var url = '/goals/' + id + '/edit';
+	var state = $this.find('input[name="state"]').val()
+
+	var data = {
+		'time': time,
+		'days': JSON.stringify(days),
+		'state': state
+	};
+
+	$.post(url, data=data, success=function(data){
+		if (data.redirect){
+			window.location.href = data.redirect;
+		}
+	});
 });
 
 // open cancel project modal
