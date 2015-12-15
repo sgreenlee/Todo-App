@@ -1,8 +1,9 @@
 from flask.ext.wtf import Form
-from wtforms import StringField, SubmitField, ValidationError
+from wtforms import StringField, SelectField, SubmitField, ValidationError
 from wtforms.fields.html5 import DateField
 from wtforms.validators import Required, Email, Length, Optional
 from ..models import MAX_LENGTH, User, Task
+from pytz import common_timezones
 
 
 class EditProfileForm(Form):
@@ -17,6 +18,7 @@ class EditProfileForm(Form):
     last_name = StringField(
         'Last Name',
         validators=[Length(0, MAX_LENGTH['last_name'])])
+    timezone = SelectField('Timezone', choices=[(tz, tz) for tz in common_timezones])
     submit = SubmitField('Update Your Profile')
 
 

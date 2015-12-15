@@ -134,13 +134,13 @@ class User(UserMixin, db.Model):
         qry = qry.group_by(sub.c.id, sub.c.name).order_by(sub.c.id)
         return qry.all()
 
-    def get_project_contributions(self, date=None):
+    def get_project_contributions(self, start_date=None):
 
-        date = date or self.get_local_date()
+        start_date = start_date or self.get_local_date()
 
         qry = Project.query.outerjoin(Contribution)
         qry = qry.filter(Project.user == self.id)
-        qry = qry.filter(Contribution.date == date)
+        qry = qry.filter(Contribution.date >= start_date)
         qry = qry.add_column(Contribution.time)
         sub = qry.subquery()
         qry = db.session.query(sub.c.id, sub.c.name,
