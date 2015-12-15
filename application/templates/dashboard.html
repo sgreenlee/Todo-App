@@ -7,14 +7,23 @@ Dashboard
 
 {% block page_content %}
 
-<div class="page-header">
-	<h1>Dashboard</h1>
-</div>
+
 
 <div class="col-md-3">
+	<h1>Dashboard</h1>
 	{% include 'tasks_module.html' %}
 </div>
 <div class="col-md-6">
+	<div class="module">
+		<div class="flex-container module-header">
+			<h3>Project Contributions</h3>
+			<ul class="flex-container">
+				<li class="active tab" data-target=""><a href="">Today's Goals</a></li>
+				<li class="tab" data-target=""><a href="" >View All</a></li>
+			</ul>
+		</div>
+		<canvas id="myChart" height="250"></canvas>	
+	</div>
 	{% include 'projects_module.html' %}
 </div>
 <div class="col-md-3">
@@ -35,4 +44,6 @@ Dashboard
 {{ super() }}
 <script src="{{ url_for('static', filename='js/projects.js') }}"></script>
 <script src="{{ url_for('static', filename='js/modal.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+<script src="{{ url_for('static', filename='js/graph.js') }}"></script>
 {% endblock %}

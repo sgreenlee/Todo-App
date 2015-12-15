@@ -1,7 +1,7 @@
 from flask import render_template, redirect, url_for, flash, abort, request
 from flask import jsonify, session
 from flask.ext.login import current_user, login_required
-from datetime import date
+from datetime import date, timedelta
 from . import main
 from .forms import EditProfileForm, NewTaskForm, NewProjectForm
 from ..models import db, User, Task, Project, Contribution, Goal, DAY_BITS
@@ -47,6 +47,7 @@ def edit_profile():
         # update user information
         current_user.first_name = form.first_name.data
         current_user.last_name = form.last_name.data
+        current_user.timezone = form.timezone.data
         db.session.add(current_user)
         flash('Your profile has been updated.')
         return redirect(url_for('main.view_profile'))
@@ -54,6 +55,7 @@ def edit_profile():
     form.email.data = current_user.email
     form.first_name.data = current_user.first_name
     form.last_name.data = current_user.last_name
+    form.timezone.data = current_user.timezone
     return render_template('edit_profile.html', form=form)
 
 
@@ -402,3 +404,20 @@ def new_project_modal():
         response.status_code = 200
         return response
     return render_template('modals/new_project_modal.html', form=form)
+
+
+@main.route('/contributions/history')
+@login_required
+def get_contribution_history():
+    today = current_user.get_local_date()
+    td = timedelta(days=7)
+    start_date = today - td
+    projects = current_user.get_project_contributions(start_date)
+    labels = []
+    data = []
+    for id, label, time in projects:
+        labels.append(label)
+        data.append(format(time / 60.0, '.2f'))
+    response = jsonify(labels=labels, data=data)
+    response.status_code = 200
+    return response

@@ -84,6 +84,10 @@
 
 /* Project Styles */
 
+canvas {
+	margin-top: 16px;
+}
+
 .project {
 	margin: 10px 0px;
 	border-bottom: 1px solid #eee;
@@ -137,11 +141,6 @@
 	width: 50%;
 	margin: 0px 10px;
 }
-
-
-
-
-
 
 .goal-list > li {
 	border-bottom: 1px solid #eee;
