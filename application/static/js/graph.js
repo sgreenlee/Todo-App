@@ -12,7 +12,7 @@ var graph = (function(){
         }]
 	};
 
-	var ctx = document.getElementById("myChart").getContext("2d");
+	var ctx = document.getElementById("project-graph").getContext("2d");
 	var projectGraph;
 
 	var getData = function(){
@@ -23,7 +23,9 @@ var graph = (function(){
 		console.log(data);
 		graphData.labels = data.labels;
 		graphData.datasets[0].data = data.data;
-		projectGraph = new Chart(ctx).Bar(graphData)
+		projectGraph = new Chart(ctx).Bar(graphData, {
+    		showScale: true
+		});
 	}
 
 	$(window).load(getData);

@@ -10,27 +10,31 @@ Dashboard
 
 
 <div class="col-md-3">
-	<h1>Dashboard</h1>
+	<div class="column-header">
+		<h1 class="page-header">Dashboard</h1>
+	</div>
 	{% include 'tasks_module.html' %}
 </div>
 <div class="col-md-6">
-	<div class="module">
+	<div id="graph-module" class="module">
 		<div class="flex-container module-header">
 			<h3>Project Contributions</h3>
-			<ul class="flex-container">
-				<li class="active tab" data-target=""><a href="">Today's Goals</a></li>
-				<li class="tab" data-target=""><a href="" >View All</a></li>
-			</ul>
+			<div class="module-links flex-container">
+				<a href="">Last Week</a>
+				<a href="" >Last 30 Days</a>
+			</div>
 		</div>
-		<canvas id="myChart" height="250"></canvas>	
+		<div class="module-body">
+			<canvas id="project-graph"></canvas>	
+		</div>
 	</div>
 	{% include 'projects_module.html' %}
 </div>
 <div class="col-md-3">
-	<div class="module" style="height:600px;">
+	<div id="appointments-module" class="module">
 		<div class="module-header flex-container">
 			<h3>Appointments</h3>
-			<a href="">+</a>
+			<a class="create-link" href="">+</a>
 		</div>
 	</div>
 </div>

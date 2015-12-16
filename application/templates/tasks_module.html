@@ -14,10 +14,10 @@
 	</li>
 {% endmacro %}
 
-<div class="module">
+<div id="tasks-module" class="module">
 	<div class="module-header flex-container">
 		<h3>Tasks</h3>
-		<a id="add-task-link" href="{{ url_for('main.add_task') }}">+</a>
+		<a class="create-link" id="add-task-link" href="{{ url_for('main.add_task') }}">+</a>
 	</div>
 	<ul class="module-list">
 		{% for task in tasks %}
